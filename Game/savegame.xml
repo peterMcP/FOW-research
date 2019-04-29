@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<game_state>
+	<input />
+	<window />
+	<textures />
+	<audio />
+	<map />
+	<pathfinding />
+	<fonts />
+	<scene>
+		<camera x="-768" y="-200.557571" />
+		<current_level name="level001.tmx" />
+	</scene>
+	<object>
+		<Box x="872" y="280" velocity_x="0" velocity_y="0" id="21" width="16" height="16" />
+		<nutCoin x="624" y="232" id="28" />
+		<Player x="384" y="280" velocity_x="0" velocity_y="0" lives="6" score="20" flip_direction="false" />
+	</object>
+	<Particles />
+	<gui />
+	<FadeToBlack />
+	<Collision />
+	<renderer>
+		<camera x="-768" y="-200" />
+	</renderer>
+</game_state>
