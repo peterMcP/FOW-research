@@ -33,6 +33,21 @@
     <ClCompile Include="j1Timer.cpp">
       <Filter>Tools</Filter>
     </ClCompile>
+    <ClCompile Include="j1EntityFactory.cpp">
+      <Filter>Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="Entity.cpp">
+      <Filter>Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="player.cpp">
+      <Filter>Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="Enemy.cpp">
+      <Filter>Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="Building.cpp">
+      <Filter>Entities</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="j1Window.h">
@@ -78,6 +93,21 @@
     <ClInclude Include="j1Timer.h">
       <Filter>Tools</Filter>
     </ClInclude>
+    <ClInclude Include="j1EntityFactory.h">
+      <Filter>Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="Entity.h">
+      <Filter>Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="player.h">
+      <Filter>Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="Enemy.h">
+      <Filter>Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="Building.h">
+      <Filter>Entities</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Modules">
@@ -94,6 +124,9 @@
     </Filter>
     <Filter Include="Tools">
       <UniqueIdentifier>{a8bfab6a-5472-4969-943e-861a8b493f08}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Entities">
+      <UniqueIdentifier>{48e74e8b-a98a-4bad-92d1-c8505bca6598}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

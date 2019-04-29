@@ -8,11 +8,11 @@
 #include "j1Window.h"
 #include "j1Map.h"
 #include "j1Scene.h"
-
+#include "j1EntityFactory.h"
 #include "j1Window.h"
 
 #include "Brofiler/Brofiler.h"
-#include "SDL_mixer/include/SDL_mixer.h"
+
 
 
 
@@ -60,6 +60,15 @@ bool j1Scene::Start()
 
 
 	//SearchValidCameraPos();
+	
+	// adds player
+	App->entityFactory->AddEntity(EntityType::PLAYER, { 100,100 });
+	// add enemy
+	App->entityFactory->AddEntity(EntityType::ENEMY, { 200,200 });
+	// add allied building
+	App->entityFactory->AddEntity(EntityType::ALLIED_BUILDING, { 400,400 });
+	// add enemies building
+	App->entityFactory->AddEntity(EntityType::ENEMY_BUILDING, { 0,0 });
 
 	App->render->camera.x = 200;
 
@@ -85,6 +94,9 @@ bool j1Scene::Update(float dt)
 	// checks for debug input
 	//DebugInput();
 	// ----------------------
+
+	
+
 
 	App->map->Draw();
 

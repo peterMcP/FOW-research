@@ -13,7 +13,7 @@ class j1Window;
 class j1Input;
 class j1Render;
 class j1Textures;
-
+class j1EntityFactory;
 class j1Scene;
 class j1Map;
 
@@ -82,7 +82,7 @@ public:
 	j1Input*			input = nullptr;
 	j1Render*			render = nullptr;
 	j1Textures*			tex = nullptr;
-	
+	j1EntityFactory*	entityFactory = nullptr;
 	j1Scene*			scene = nullptr;
 	j1Map*				map = nullptr;
 

@@ -76,6 +76,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Building.cpp" />
+    <ClCompile Include="Enemy.cpp" />
+    <ClCompile Include="Entity.cpp" />
+    <ClCompile Include="j1EntityFactory.cpp" />
     <ClCompile Include="j1Main.cpp" />
     <ClCompile Include="j1App.cpp" />
     <ClCompile Include="j1Input.cpp" />
@@ -87,9 +91,14 @@
     <ClCompile Include="j1Render.cpp" />
     <ClCompile Include="j1Textures.cpp" />
     <ClCompile Include="j1Window.cpp" />
+    <ClCompile Include="player.cpp" />
     <ClCompile Include="PugiXml\src\pugixml.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Building.h" />
+    <ClInclude Include="Enemy.h" />
+    <ClInclude Include="Entity.h" />
+    <ClInclude Include="j1EntityFactory.h" />
     <ClInclude Include="j1Map.h" />
     <ClInclude Include="j1PerfTimer.h" />
     <ClInclude Include="j1Scene.h" />
@@ -103,6 +112,7 @@
     <ClInclude Include="j1Render.h" />
     <ClInclude Include="j1Textures.h" />
     <ClInclude Include="j1Window.h" />
+    <ClInclude Include="player.h" />
     <ClInclude Include="PugiXml\src\pugiconfig.hpp" />
     <ClInclude Include="PugiXml\src\pugixml.hpp" />
   </ItemGroup>
