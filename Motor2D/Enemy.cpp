@@ -1,6 +1,7 @@
 #include "Enemy.h"
 
-Enemy::Enemy() {}
+Enemy::Enemy() : Entity(type,position)
+{}
 
 Enemy::~Enemy() {}
 

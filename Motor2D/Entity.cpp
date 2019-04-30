@@ -3,10 +3,8 @@
 #include "j1EntityFactory.h"
 #include "j1Render.h"
 
-Entity::Entity()
-{
-
-}
+Entity::Entity(EntityType type, iPoint position) : position(position), type(type)
+{}
 
 Entity::~Entity() {}
 

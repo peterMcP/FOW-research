@@ -5,7 +5,7 @@
 
 #include "p2Log.h"
 
-Player::Player() 
+Player::Player(iPoint position) : Entity(type, position)
 {
 	// Adds fow emitter
 	fogVisibilityEmitter = App->fogOfWar->AddFogEmitter(5);

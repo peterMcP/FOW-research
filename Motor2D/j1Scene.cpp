@@ -64,11 +64,11 @@ bool j1Scene::Start()
 	//SearchValidCameraPos();
 	
 	// adds player
-	App->entityFactory->AddEntity(EntityType::PLAYER, { 100,100 });
-	//// add enemy
+	App->entityFactory->AddEntity(EntityType::PLAYER, { -160,300 });
+	//// add enemys
 	//App->entityFactory->AddEntity(EntityType::ENEMY, { 200,200 });
-	//// add allied building
-	//App->entityFactory->AddEntity(EntityType::ALLIED_BUILDING, { 400,400 });
+	// add allied building
+	App->entityFactory->AddEntity(EntityType::ALLIED_BUILDING, { 100,100 });
 	//// add enemies building
 	//App->entityFactory->AddEntity(EntityType::ENEMY_BUILDING, { 0,0 });
 
@@ -97,7 +97,23 @@ bool j1Scene::Update(float dt)
 	//DebugInput();
 	// ----------------------
 
-	
+	int camSpeed = 5;
+	if (App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
+	{
+		App->render->camera.y += camSpeed;
+	}
+	if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT)
+	{
+		App->render->camera.y -= camSpeed;
+	}
+	if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
+	{
+		App->render->camera.x -= camSpeed;
+	}
+	if (App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT)
+	{
+		App->render->camera.x += camSpeed;
+	}
 
 
 	App->map->Draw();

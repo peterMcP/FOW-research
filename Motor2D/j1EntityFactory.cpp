@@ -93,7 +93,7 @@ Entity* j1EntityFactory::AddEntity(EntityType type, iPoint position)
 	{
 	case EntityType::PLAYER:
 	{
-		ret = new Player();
+		ret = new Player(position);
 		ret->spriteRect = { 447,76,65,70 };
 		break;
 	}
@@ -105,13 +105,13 @@ Entity* j1EntityFactory::AddEntity(EntityType type, iPoint position)
 	}
 	case EntityType::ALLIED_BUILDING:
 	{
-		ret = new Building(type);
+		ret = new Building(type, position);
 		ret->spriteRect = { 0, 0, 436,352 };
 		break;
 	}
 	case EntityType::ENEMY_BUILDING:
 	{
-		ret = new Building(type);
+		ret = new Building(type, position);
 		ret->spriteRect = { 0, 368, 436,352 };
 		break;
 		break;

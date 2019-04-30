@@ -26,7 +26,7 @@ bool j1FowManager::Start()
 
 	debugPropagationTex = App->tex->LoadTexture("maps/meta2.png");
 
-	debug = true;
+	//debug = true;
 
 	return ret;
 }
@@ -74,6 +74,22 @@ bool j1FowManager::PostUpdate()
 		}
 	}
 
+	// for every fogged tile, print the fog
+	// only for tiles on screen margins and on the fog list
+	//TODO
+	for (int y = 0; y < height; y++)
+	{
+		for (int x = 0; x < width; x++)
+		{
+			if (fogDataMap[y * width + x] == FOGTYPE::FOG)
+			{
+				iPoint drawPos = App->map->MapToWorld(x, y);
+				SDL_Rect rect = { 64,0,64,64 };
+				App->render->Blit(debugPropagationTex, drawPos.x, drawPos.y, &rect);
+			}
+		}
+	}
+
 	return ret;
 }
 
@@ -100,12 +116,14 @@ void j1FowManager::CreateFogDataMap(uint width, uint height)
 
 FOGTYPE j1FowManager::GetFogTileAt(iPoint position) const
 {
-	FOGTYPE ret = FOGTYPE::SHROUD; // if is not inside boundaries, shroud
+	FOGTYPE ret = FOGTYPE::FOG; // if is not inside boundaries, shroud
 
 	if (CheckFogMapBoundaries(position))
 	{
-		ret = fogDataMap[position.y * width + position.x];
+		ret = fogDataMap[(position.y * width) + position.x];
 	}
+	/*else
+		ret = FOGTYPE::SHROUD;*/
 
 	return ret;
 }
@@ -169,6 +187,8 @@ bool FowEmitter::Update(float dt)
 		visited.push_back(position);
 		// propagate new visibility positions
 		PropagateBFS();
+		// filter
+		FilterLastVisibles();
 		// updates data map
 		UpdateVisibilitySpot();
 		// updates previous position to this new position
@@ -250,6 +270,23 @@ bool FowEmitter::PropagateBFS()
 	return ret;
 }
 
+bool FowEmitter::FilterLastVisibles()
+{
+	// compare last propagation with the data of fog map
+
+	for (std::list<iPoint>::iterator lastVisited = visited.begin(); lastVisited != visited.end(); )
+	{
+		if (App->fogOfWar->GetFogTileAt((*lastVisited)) == FOGTYPE::VISIBLE)
+		{
+			lastVisited = visited.erase(lastVisited);
+		}
+		else
+			++lastVisited;
+	}
+
+	return true;
+}
+
 bool FowEmitter::UpdateVisibilitySpot()
 {
 	bool ret = true;
@@ -258,8 +295,8 @@ bool FowEmitter::UpdateVisibilitySpot()
 	// only turns "on" visibility, means the player has sight on this zone
 	for (std::list<iPoint>::iterator position = visited.begin(); position != visited.end(); ++position)
 	{
-		if (App->fogOfWar->GetFogTileAt((*position)) != FOGTYPE::NONE)
-			App->fogOfWar->SetFogTypeToTile(FOGTYPE::NONE, (*position));
+		if (App->fogOfWar->GetFogTileAt((*position)) != FOGTYPE::VISIBLE)
+			App->fogOfWar->SetFogTypeToTile(FOGTYPE::VISIBLE, (*position));
 	}
 	
 	return ret;
@@ -269,24 +306,17 @@ bool FowEmitter::RemoveLastVisibilitySpot()
 {
 	bool ret = true;
 
-	// pop out frontier and clear visiteds
-	while (!frontier.empty())
+	for (std::list<iPoint>::iterator lastVisited = visited.begin(); lastVisited != visited.end(); ++lastVisited)
 	{
-		iPoint currentTile = frontier.front();
-		frontier.pop(); // pops last queue value
-
-		if (App->fogOfWar->GetFogTileAt(currentTile) == FOGTYPE::NONE)
-					App->fogOfWar->SetFogTypeToTile(FOGTYPE::FOG, currentTile);
+		if (App->fogOfWar->GetFogTileAt((*lastVisited)) == FOGTYPE::VISIBLE)
+				App->fogOfWar->SetFogTypeToTile(FOGTYPE::FOG, (*lastVisited));
 	}
-
+	
+	// "clear" frontier queue ---
+	std::queue<iPoint> empty;
+	std::swap(frontier, empty);
+	// --------------------------
 	visited.clear();
-
-	//// clears all the data from fog data map
-	//for (std::vector<iPoint>::iterator position = lastVisibilityPositions.begin(); position != lastVisibilityPositions.end(); ++position)
-	//{
-	//	if (App->fogOfWar->GetFogTileAt((*position)) == FOGTYPE::NONE)
-	//		App->fogOfWar->SetFogTypeToTile(FOGTYPE::FOG, (*position));
-	//}
 
 	return ret;
 }

@@ -6,7 +6,7 @@
 class Building : public Entity
 {
 public:
-	Building(EntityType type);
+	Building(EntityType type, iPoint position);
 	~Building();
 
 public:

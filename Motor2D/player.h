@@ -6,7 +6,7 @@
 class Player : public Entity
 {
 public:
-	Player();
+	Player(iPoint position);
 	~Player();
 
 	bool Update(float dt);

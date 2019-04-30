@@ -16,7 +16,7 @@ enum class EntityType
 class Entity
 {
 public:
-	Entity();
+	Entity(EntityType type, iPoint position);
 	~Entity();
 
 	virtual bool Update(float dt);

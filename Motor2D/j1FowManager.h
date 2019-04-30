@@ -14,7 +14,7 @@ enum class FOGTYPE : uint
 {
 	SHROUD,
 	FOG,
-	NONE,
+	VISIBLE,
 	MAX
 };
 
@@ -40,6 +40,7 @@ private:
 	bool RemoveLastVisibilitySpot();
 	// updates data map
 	bool UpdateVisibilitySpot();
+	bool FilterLastVisibles();
 
 public:
 	bool to_delete = false;
