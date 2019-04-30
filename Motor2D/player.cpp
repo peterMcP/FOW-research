@@ -3,7 +3,14 @@
 #include "j1Input.h"
 #include "SDL/include/SDL_scancode.h"
 
-Player::Player() {}
+#include "p2Log.h"
+
+Player::Player() 
+{
+	// Adds fow emitter
+	fogVisibilityEmitter = App->fogOfWar->AddFogEmitter(5);
+	LOG("");
+}
 
 Player::~Player() {}
 
@@ -12,6 +19,17 @@ bool Player::Update(float dt)
 {
 	bool ret = true;
 
+	SimpleInput();
+
+	// updates position of the emitter
+
+	fogVisibilityEmitter->SetPos(position);
+
+	return ret;
+}
+
+void Player::SimpleInput()
+{
 	int speed = 3;
 
 	if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT)
@@ -30,6 +48,4 @@ bool Player::Update(float dt)
 	{
 		position.x += speed;
 	}
-
-	return ret;
 }

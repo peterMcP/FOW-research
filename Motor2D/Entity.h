@@ -2,6 +2,8 @@
 #define __ENTITY_H__
 
 #include "p2Point.h"
+//#include "j1FowManager.h"
+#include "j1FowManager.h"
 
 enum class EntityType
 {
@@ -28,6 +30,9 @@ public:
 
 	iPoint position;
 	SDL_Rect spriteRect;
+
+	// TODO: add fog of war emitter
+	FowEmitter* fogVisibilityEmitter = nullptr;
 
 
 };

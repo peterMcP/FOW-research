@@ -11,6 +11,7 @@
 #include "j1EntityFactory.h"
 #include "j1Map.h"
 #include "j1App.h"
+#include "j1FowManager.h"
 #include "Brofiler/Brofiler.h"
 //#include "SDL/include/SDL_thread.h"
 
@@ -26,6 +27,7 @@ j1App::j1App(int argc, char* args[]) : argc(argc), args(args)
 	scene = new j1Scene();
 	map = new j1Map();
 	entityFactory = new j1EntityFactory();
+	fogOfWar = new j1FowManager();
 	
 
 	// Ordered for awake / Start / Update
@@ -36,6 +38,7 @@ j1App::j1App(int argc, char* args[]) : argc(argc), args(args)
 	AddModule(map);
 	AddModule(scene);
 	AddModule(entityFactory);
+	AddModule(fogOfWar); // fog of war the last element before render, and previous to any possible UI element
 	AddModule(render);// render last to swap buffer
 
 	PERF_PEEK(ptimer);

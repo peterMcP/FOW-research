@@ -11,6 +11,9 @@ public:
 
 	bool Update(float dt);
 
+public:
+
+	void SimpleInput();
 		
 };
 #endif // !_PLAYER_H__

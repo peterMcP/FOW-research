@@ -6,6 +6,7 @@
 #include "j1Module.h"
 #include <list>
 
+struct SDL_Texture;
 
 struct Levels
 {
@@ -98,7 +99,7 @@ struct TileSet
 	int					offset_x;
 	int					offset_y;
 	
-	float				animSpeedFactor = 0.15f; // TODO, implement this custom propierty from tileset of animation
+	//float				animSpeedFactor = 0.15f; // TODO, implement this custom propierty from tileset of animation
 };
 
 enum class MapTypes

@@ -48,6 +48,9 @@
     <ClCompile Include="Building.cpp">
       <Filter>Entities</Filter>
     </ClCompile>
+    <ClCompile Include="j1FowManager.cpp">
+      <Filter>Modules</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="j1Window.h">
@@ -107,6 +110,9 @@
     </ClInclude>
     <ClInclude Include="Building.h">
       <Filter>Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="j1FowManager.h">
+      <Filter>Modules</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

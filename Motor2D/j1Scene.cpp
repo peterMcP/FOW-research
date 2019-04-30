@@ -3,17 +3,15 @@
 #include "j1App.h"
 #include "j1Input.h"
 #include "j1Textures.h"
-
 #include "j1Render.h"
 #include "j1Window.h"
 #include "j1Map.h"
 #include "j1Scene.h"
 #include "j1EntityFactory.h"
 #include "j1Window.h"
+#include "j1FowManager.h"
 
 #include "Brofiler/Brofiler.h"
-
-
 
 
 j1Scene::j1Scene() : j1Module()
@@ -43,6 +41,10 @@ bool j1Scene::Awake(pugi::xml_node& node)
 bool j1Scene::Start()
 {
 	App->map->Load("maps/level.tmx");
+
+	// creates fog of war data
+
+	App->fogOfWar->CreateFogDataMap(App->map->data.columns, App->map->data.rows);
 		
 	//// create walkability map
 	//if (App->map->map_loaded)
@@ -63,14 +65,14 @@ bool j1Scene::Start()
 	
 	// adds player
 	App->entityFactory->AddEntity(EntityType::PLAYER, { 100,100 });
-	// add enemy
-	App->entityFactory->AddEntity(EntityType::ENEMY, { 200,200 });
-	// add allied building
-	App->entityFactory->AddEntity(EntityType::ALLIED_BUILDING, { 400,400 });
-	// add enemies building
-	App->entityFactory->AddEntity(EntityType::ENEMY_BUILDING, { 0,0 });
+	//// add enemy
+	//App->entityFactory->AddEntity(EntityType::ENEMY, { 200,200 });
+	//// add allied building
+	//App->entityFactory->AddEntity(EntityType::ALLIED_BUILDING, { 400,400 });
+	//// add enemies building
+	//App->entityFactory->AddEntity(EntityType::ENEMY_BUILDING, { 0,0 });
 
-	App->render->camera.x = 200;
+	App->render->camera.x = 400;
 
 	
 	return true;

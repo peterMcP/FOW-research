@@ -16,6 +16,7 @@ class j1Textures;
 class j1EntityFactory;
 class j1Scene;
 class j1Map;
+class j1FowManager;
 
 class j1App
 {
@@ -85,6 +86,7 @@ public:
 	j1EntityFactory*	entityFactory = nullptr;
 	j1Scene*			scene = nullptr;
 	j1Map*				map = nullptr;
+	j1FowManager*		fogOfWar = nullptr;
 
 	bool vsync = false;
 	bool requestExit = false;
