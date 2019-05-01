@@ -72,7 +72,7 @@ void j1Map::Draw()
 			for (int x = 0; x < data.columns; ++x)
 			{
 				// TODO: CHECK IF WE HAVE SHROUD, if we have, ignore this print
-				if (App->fogOfWar->GetFogTileAt({ x,y }) == FOGTYPE::SHROUD)
+				if (App->fogOfWar->GetFogTileAt({ x,y })->type == FOGTYPE::SHROUD)
 					continue;
 
 				int tile_id = (*layer)->GetArrayPos(x, y);

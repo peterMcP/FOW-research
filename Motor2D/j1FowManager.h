@@ -18,6 +18,12 @@ enum class FOGTYPE : uint
 	MAX
 };
 
+struct FOGTILE
+{
+	FOGTYPE type;
+	uint spriteTileIndex;
+};
+
 // we have to add this emitter to any entity what we want
 // fow emitter updates auto its visibility to fog data map
 class FowEmitter
@@ -41,6 +47,7 @@ private:
 	// updates data map
 	bool UpdateVisibilitySpot();
 	bool FilterLastVisibles();
+	//void AssignSpriteIndexToCurrentFrontier();
 
 public:
 	bool to_delete = false;
@@ -79,15 +86,24 @@ public:
 	//bool IsTileShroud(int x, int y) const;
 	void PrintFrontiersToTex(std::queue<iPoint>& frontier);
 
+	void AssignSpriteIndexToListPositions(std::list<iPoint>& pointsList);
+
 protected:
 	void SetFogTypeToTile(FOGTYPE type, iPoint position);
+	void SetSpriteIndexToTile(int index, iPoint pos);
 
 //private:
 public:
-	FOGTYPE GetFogTileAt(iPoint position) const;
+	FOGTILE* GetFogTileAt(iPoint position) const;
 	bool CheckFogMapBoundaries(iPoint position) const;
 
 private:
+	std::list<iPoint> visibleTiles;
+	std::list<iPoint> foggedTiles;
+	std::list<iPoint> shroudTiles;
+
+	SDL_Rect foggyTiles[32];
+	SDL_Texture* fogSmoothTex = nullptr;
 	// DEBUG
 	SDL_Texture* debugPropagationTex = nullptr;
 	bool debug = false;
@@ -98,7 +114,7 @@ private:
 	uint width;
 	uint height;
 	// ------------------------
-	FOGTYPE* fogDataMap = nullptr; // stores entire tilemap states for every tile
+	FOGTILE* fogDataMap = nullptr; // stores entire tilemap states for every tile
 	std::list<FowEmitter*> currentEmitters; // stores all emitters on entities
 
 	friend class FowEmitter;
