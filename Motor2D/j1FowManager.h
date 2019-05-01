@@ -44,6 +44,7 @@ private:
 
 public:
 	bool to_delete = false;
+	std::queue<iPoint> frontier;
 
 
 private:
@@ -54,7 +55,7 @@ private:
 	// stores all positions from last emission
 	//std::vector<iPoint> lastVisibilityPositions;
 	// bfs relatives
-	std::queue<iPoint> frontier;
+	//std::queue<iPoint> frontier;
 	std::list<iPoint> visited;
 };
 
@@ -76,6 +77,8 @@ public:
 	void CreateFogDataMap(const uint width, const uint height);
 	FowEmitter* AddFogEmitter(uint radius);
 	//bool IsTileShroud(int x, int y) const;
+	void PrintFrontiersToTex(std::queue<iPoint>& frontier);
+
 protected:
 	void SetFogTypeToTile(FOGTYPE type, iPoint position);
 
@@ -88,6 +91,9 @@ private:
 	// DEBUG
 	SDL_Texture* debugPropagationTex = nullptr;
 	bool debug = false;
+	//
+	SDL_Texture* blurredFogTex = nullptr;
+	SDL_Texture* swapTexForBlur = nullptr;
 	// stores data map size ---
 	uint width;
 	uint height;

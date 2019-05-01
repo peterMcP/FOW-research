@@ -5,6 +5,8 @@
 #include "j1Textures.h"
 #include "Entity.h"
 #include "j1Render.h"
+#include "j1EntityFactory.h"
+#include "j1Window.h"
 
 j1FowManager::j1FowManager()
 {
@@ -26,6 +28,15 @@ bool j1FowManager::Start()
 
 	debugPropagationTex = App->tex->LoadTexture("maps/meta2.png");
 
+	// change hint render scale quality to linear for this texture
+	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1"); // linear
+	uint w, h;
+	App->win->GetWindowSize(w, h);
+	blurredFogTex = App->tex->CreateTargetTexture(w, h);
+	swapTexForBlur = App->tex->CreateTargetTexture(w / 4, h / 4);
+	// reset hint change
+	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "0"); // nearest neighbour
+
 	//debug = true;
 
 	return ret;
@@ -38,6 +49,39 @@ bool j1FowManager::PreUpdate()
 	return ret;
 }
 
+void j1FowManager::PrintFrontiersToTex(std::queue<iPoint>& frontier)
+{
+	std::queue<iPoint> tempFrontier = frontier;
+	
+	if (!tempFrontier.empty())
+	{
+		// change render to texture
+		SDL_SetRenderTarget(App->render->renderer, blurredFogTex);
+		SDL_SetRenderDrawColor(App->render->renderer, 0, 0, 0, 0);
+		// clear last frame
+		SDL_RenderClear(App->render->renderer);
+
+		while (!tempFrontier.empty())
+		{
+			iPoint frontierPos = tempFrontier.front();
+			tempFrontier.pop();
+
+			iPoint drawPos = App->map->MapToWorld(frontierPos.x, frontierPos.y);
+			SDL_Rect rect = { 452,233,64,64 };
+			SDL_Rect dstRect = { drawPos.x,drawPos.y, rect.w, rect.h };
+			//App->render->Blit(debugPropagationTex, drawPos.x, drawPos.y, &rect);
+			//SDL_RenderCopyEx(App->render->renderer, blurredFogTex, &sprite_rect, &section_to_print, 0, 0, SDL_FLIP_NONE);
+
+
+			SDL_RenderCopy(App->render->renderer, App->entityFactory->entities_atlas_tex, &rect, &dstRect);
+		}
+
+		SDL_SetRenderTarget(App->render->renderer, NULL);
+	}
+
+
+}
+
 bool j1FowManager::Update(float dt)
 {
 	bool ret = true;
@@ -48,6 +92,8 @@ bool j1FowManager::Update(float dt)
 		{
 			(*iter)->Update(dt);
 			//LOG("emitter pos:%i,%i", (*iter)->position.x, (*iter)->position.y);
+			//(*iter)->frontier
+			PrintFrontiersToTex((*iter)->frontier);
 			++iter;
 		}
 		else
@@ -58,6 +104,79 @@ bool j1FowManager::Update(float dt)
 		}
 	}
 
+	// render to texture
+	// changes render to target texture
+
+	SDL_SetRenderTarget(App->render->renderer, blurredFogTex); // this
+	///*SDL_SetRenderDrawColor(App->render->renderer, 0, 0, 0, 0);
+	//SDL_RenderClear(App->render->renderer);*/
+	////SDL_SetRenderDrawBlendMode(App->render->renderer, SDL_BLENDMODE_ADD);
+	////SDL_SetTextureBlendMode(blurredFogTex, SDL_BLENDMODE_BLEND);
+
+	for (int y = 0; y < height; y++)
+	{
+		for (int x = 0; x < width; x++)
+		{
+			if (fogDataMap[y * width + x] == FOGTYPE::FOG)
+			{
+				iPoint drawPos = App->map->MapToWorld(x, y);
+				SDL_Rect rect = { 452,282,64,64 }; // 452,282 // 64,0,64,64
+				SDL_Rect dstRect = { drawPos.x,drawPos.y, rect.w, rect.h };
+				//App->render->Blit(debugPropagationTex, drawPos.x, drawPos.y, &rect);
+				//SDL_RenderCopyEx(App->render->renderer, blurredFogTex, &sprite_rect, &section_to_print, 0, 0, SDL_FLIP_NONE);
+				
+				
+				SDL_RenderCopy(App->render->renderer, App->entityFactory->entities_atlas_tex, &rect, &dstRect);
+			}
+		}
+	}
+
+	/*uint w, h;
+	App->win->GetWindowSize(w, h);*/
+
+	/*SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1");
+	SDL_Texture* swapTexForBlur = App->tex->CreateTargetTexture(w / 4, h / 4);*/
+	int passes = 8;
+	for (int i = 0; i < passes; ++i)
+	{
+		//SDL_RenderClear(App->render->renderer);
+		SDL_SetRenderTarget(App->render->renderer, swapTexForBlur);
+		SDL_RenderClear(App->render->renderer);
+		SDL_RenderCopy(App->render->renderer, blurredFogTex, NULL, NULL);
+		
+		//SDL_RenderClear(App->render->renderer);
+		SDL_SetRenderTarget(App->render->renderer, blurredFogTex);
+		SDL_RenderClear(App->render->renderer);
+		SDL_RenderCopy(App->render->renderer, swapTexForBlur, NULL, NULL);
+
+		//SDL_RenderClear(App->render->renderer);
+		
+	}
+	////SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "0");
+	SDL_SetRenderTarget(App->render->renderer, NULL);
+	//SDL_DestroyTexture(swapTexForBlur);
+	//SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "0");
+
+
+	// blurr texture
+	/*for (int i = 0; i < 4; ++i)
+	{*/
+	/*int w, h;
+	SDL_QueryTexture(blurredFogTex, NULL, NULL,&w, &h);
+	SDL_Rect dstRect = { 0,0, w /2, h /2 };
+	SDL_RenderCopy(App->render->renderer, blurredFogTex, NULL, &dstRect);*/
+	/*dstRect = { 0,0, w, h };
+	SDL_RenderCopy(App->render->renderer, blurredFogTex, NULL, &dstRect);*/
+	//}
+
+	//Reset render target 
+	//SDL_SetRenderTarget(App->render->renderer, NULL);
+
+	/*int w, h;
+	SDL_QueryTexture(blurredFogTex, NULL, NULL, &w, &h);
+	SDL_Rect dstRect = { 0,0, w / 2, h / 2 };
+	SDL_RenderCopy(App->render->renderer, blurredFogTex, NULL, &dstRect);*/
+
 	return ret;
 }
 
@@ -66,18 +185,20 @@ bool j1FowManager::PostUpdate()
 	bool ret = true;
 
 	// prints debug visibility zone
-	if (debug)
+	/*if (debug)
 	{
 		for (std::list<FowEmitter*>::iterator iter = currentEmitters.begin(); iter != currentEmitters.end(); ++iter)
 		{
 			(*iter)->PostUpdate();
 		}
-	}
+	}*/
 
+	SDL_SetTextureAlphaMod(blurredFogTex, 225);
+	App->render->Blit(blurredFogTex, 0, 0);//-App->render->camera.x, -App->render->camera.y);
 	// for every fogged tile, print the fog
 	// only for tiles on screen margins and on the fog list
 	//TODO
-	for (int y = 0; y < height; y++)
+	/*for (int y = 0; y < height; y++)
 	{
 		for (int x = 0; x < width; x++)
 		{
@@ -89,7 +210,7 @@ bool j1FowManager::PostUpdate()
 			}
 		}
 	}
-
+*/
 	return ret;
 }
 

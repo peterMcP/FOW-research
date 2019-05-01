@@ -119,3 +119,34 @@ void j1Textures::GetSize(const SDL_Texture* texture, uint& width, uint& height) 
 {
 	SDL_QueryTexture((SDL_Texture*)texture, NULL, NULL, (int*) &width, (int*) &height);
 }
+
+
+SDL_Texture* const j1Textures::CreateTargetTexture(const uint width, const uint height)
+{
+	SDL_Texture* ret = nullptr;
+
+	SDL_Surface* newSurface = nullptr;
+
+	newSurface = SDL_CreateRGBSurface(0, width, height, 32, 0, 0, 0, 0);
+
+	if (SDL_SetSurfaceBlendMode(newSurface, SDL_BLENDMODE_BLEND) < 0)
+	{
+		LOG("Failed to create blend mode for new surface");
+	}
+	else
+		LOG("Succesfully changed blend mode for new surface");
+
+	newSurface = SDL_ConvertSurfaceFormat(newSurface, SDL_PIXELFORMAT_ARGB8888, NULL);
+
+	ret = SDL_CreateTexture(App->render->renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_TARGET, newSurface->w, newSurface->h);
+
+	SDL_SetTextureBlendMode(ret, SDL_BLENDMODE_BLEND);
+
+	SDL_FreeSurface(newSurface);
+
+	if (ret != NULL)
+		return ret;
+
+	return nullptr;
+
+}
