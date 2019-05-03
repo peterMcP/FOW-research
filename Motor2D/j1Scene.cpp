@@ -66,7 +66,7 @@ bool j1Scene::Start()
 	// adds player
 	App->entityFactory->AddEntity(EntityType::PLAYER, { -160,300 });
 	//// add enemys
-	//App->entityFactory->AddEntity(EntityType::ENEMY, { 200,200 });
+	App->entityFactory->AddEntity(EntityType::ENEMY, { 200,200 });
 	// add allied building
 	//App->entityFactory->AddEntity(EntityType::ALLIED_BUILDING, { 100,100 });
 	//// add enemies building
@@ -115,7 +115,6 @@ bool j1Scene::Update(float dt)
 		App->render->camera.x += camSpeed;
 	}
 
-	// --------------------------------------------------------------
 	// DEBUG FUNCTIONALITY
 
 	int x, y;
@@ -124,17 +123,11 @@ bool j1Scene::Update(float dt)
 
 	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN)
 	{
-		
+
 		// adds player
 		App->entityFactory->AddEntity(EntityType::PLAYER, { mousePos.x,mousePos.y });
 	}
-	//if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_DOWN)
-	//{
-	//	// adds player
-	//	App->entityFactory->AddEntity(EntityType::ALLIED_BUILDING, { mousePos.x,mousePos.y });
-	//}
 
-	// -----------------------------------------------------------------
 
 	App->map->Draw();
 

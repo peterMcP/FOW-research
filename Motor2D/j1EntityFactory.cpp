@@ -4,6 +4,7 @@
 #include "Enemy.h"
 #include "Building.h"
 #include "j1Textures.h"
+#include "j1Map.h"
 
 j1EntityFactory::j1EntityFactory()
 {
@@ -55,7 +56,14 @@ bool j1EntityFactory::PostUpdate()
 
 	for (std::list<Entity*>::iterator iter = entities.begin(); iter != entities.end(); ++iter)
 	{
-		(*iter)->Draw();
+		// TODO: check entity types of our interest to draw or not outside visibility zone
+		if ((*iter)->type == EntityType::ENEMY)
+		{
+			if(App->fogOfWar->IsThisTileVisible((*iter)->position))
+				(*iter)->Draw();
+		}
+		else
+			(*iter)->Draw();
 	}
 
 	return ret;

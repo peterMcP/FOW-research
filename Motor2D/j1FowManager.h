@@ -8,20 +8,57 @@
 #include <vector>
 #include <queue>
 
+#define FOW_BIT_NW  (1 << 0)
+#define FOW_BIT_N   (1 << 1)
+#define FOW_BIT_NE  (1 << 2)
+#define FOW_BIT_W   (1 << 3)
+#define FOW_BIT_C   (1 << 4)
+#define FOW_BIT_E   (1 << 5)
+#define FOW_BIT_SW  (1 << 6)
+#define FOW_BIT_S   (1 << 7)
+#define FOW_BIT_SE  (1 << 8)
+
+#define fow_non 0
+
+#define fow_all         (FOW_BIT_NW | FOW_BIT_N | FOW_BIT_NE | FOW_BIT_W | FOW_BIT_C | FOW_BIT_E |FOW_BIT_SW | FOW_BIT_S | FOW_BIT_SE)
+
+#define NUM_FOW_ENTRIES fow_all
+
+// straights
+#define fow_EEE         (FOW_BIT_SE | FOW_BIT_E | FOW_BIT_NE)
+#define fow_NNN         (FOW_BIT_NE | FOW_BIT_N | FOW_BIT_NW)
+#define fow_WWW         (FOW_BIT_NW | FOW_BIT_W | FOW_BIT_SW)
+#define fow_SSS         (FOW_BIT_SW | FOW_BIT_S | FOW_BIT_SE)
+
+// corners
+#define fow_CNE         (FOW_BIT_E | FOW_BIT_NE | FOW_BIT_N |FOW_BIT_NW | FOW_BIT_C | FOW_BIT_SE)
+#define fow_CNW         (FOW_BIT_N | FOW_BIT_NW | FOW_BIT_W |FOW_BIT_SW | FOW_BIT_C | FOW_BIT_NE)
+#define fow_CSW         (FOW_BIT_W | FOW_BIT_SW | FOW_BIT_S |FOW_BIT_NW | FOW_BIT_C | FOW_BIT_SE)
+#define fow_CSE         (FOW_BIT_S | FOW_BIT_SE | FOW_BIT_E |FOW_BIT_NE | FOW_BIT_C | FOW_BIT_SW)
+
+	// joins
+#define fow_JNE         (FOW_BIT_E | FOW_BIT_NE | FOW_BIT_N)
+#define fow_JNW         (FOW_BIT_N | FOW_BIT_NW | FOW_BIT_W)
+#define fow_JSW         (FOW_BIT_W | FOW_BIT_SW | FOW_BIT_S)
+#define fow_JSE         (FOW_BIT_S | FOW_BIT_SE | FOW_BIT_E)
+
+// max num of sprite rects
+#define MAX_FOW_GRAPHICS 14
+
 struct SDL_Texture;
 
 enum class FOGTYPE : uint
 {
-	//SHROUD,
+	SHROUD,
 	FOG,
 	VISIBLE,
 	MAX
 };
 
-struct FOGTILE
+struct FOWTILE
 {
-	FOGTYPE type;
-	uint spriteTileIndex;
+	unsigned short m_bits;
+	unsigned short m_bits2;
 };
 
 // we have to add this emitter to any entity what we want
@@ -42,28 +79,16 @@ public:
 	void SetPos(iPoint pos);
 
 private:
-	bool PropagateBFS();
-	bool RemoveLastVisibilitySpot();
-	// updates data map
-	bool UpdateVisibilitySpot();
-	bool FilterLastVisibles();
-	//void AssignSpriteIndexToCurrentFrontier();
 
 public:
 	bool to_delete = false;
-	std::queue<iPoint> frontier;
 
 
 private:
+	
 	uint radius;
 	iPoint position; // on TILE values
-	iPoint previousPosition; // on TILE values
-
-	// stores all positions from last emission
-	//std::vector<iPoint> lastVisibilityPositions;
-	// bfs relatives
-	//std::queue<iPoint> frontier;
-	std::list<iPoint> visited;
+	//iPoint previousPosition; // on TILE values
 };
 
 
@@ -83,45 +108,29 @@ public:
 public:
 	void CreateFogDataMap(const uint width, const uint height);
 	FowEmitter* AddFogEmitter(uint radius);
-	//bool IsTileShroud(int x, int y) const;
-	void PrintFrontiersToTex(std::queue<iPoint>& frontier);
+	bool IsThisTileVisible(iPoint position) const;
 
-	void AssignSpriteIndexToListPositions(std::list<iPoint>& pointsList);
-
-protected:
-	void SetFogTypeToTile(FOGTYPE type, iPoint position);
-	void SetSpriteIndexToTile(int index, iPoint pos);
 
 //private:
 public:
-	FOGTILE* GetFogTileAt(iPoint position) const;
+	FOWTILE* GetFogTileAt(iPoint position) const;
 	bool CheckFogMapBoundaries(iPoint position) const;
 
 private:
-	std::list<iPoint> visibleTiles;
-	std::list<iPoint> foggedTiles;
-	std::list<iPoint> shroudTiles;
-
-	SDL_Rect foggyTiles[32];
-	SDL_Texture* fogSmoothTex = nullptr;
-	// DEBUG
-	SDL_Texture* debugPropagationTex = nullptr;
+	SDL_Rect foggyTilesRects[MAX_FOW_GRAPHICS];
+	SDL_Texture* smoothFogTex = nullptr;
+	signed char fog_rects_table[NUM_FOW_ENTRIES];
 	bool debug = false;
-	//
-	SDL_Texture* blurredFogTex = nullptr;
-	SDL_Texture* swapTexForBlur = nullptr;
 	// stores data map size ---
 	uint width;
 	uint height;
 	// ------------------------
-	FOGTILE* fogDataMap = nullptr; // stores entire tilemap states for every tile
+	FOWTILE* fogDataMap = nullptr; // stores entire tilemap states for every tile
 	std::list<FowEmitter*> currentEmitters; // stores all emitters on entities
 
 	friend class FowEmitter;
 
 };
-
-
 
 
 #endif // !__J1FOWMANAGER_H__
