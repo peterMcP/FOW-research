@@ -13,14 +13,6 @@ j1FowManager::j1FowManager()
 	name.assign("Fog of War Manager");
 
 	// rects for every index to print smooth corners
-
-	
-
-	/*for (int i = 0; i < 16; ++i)
-	{
-		for (int j = 0; j < 2; j++)
-			foggyTiles[i * j] = { i * 64,j * 64,64,64 };
-	}*/
 	for (int i = 0; i < 16; ++i)
 		foggyTiles[i] = { i * 64,0,64,64 };
 	for(int i = 16; i< 32; ++i)
@@ -41,7 +33,7 @@ bool j1FowManager::Start()
 	bool ret = true;
 
 	debugPropagationTex = App->tex->LoadTexture("maps/meta2.png");
-	fogSmoothTex = App->tex->LoadTexture("textures/fow_textures.png");
+	fogSmoothTex = App->tex->LoadTexture("textures/FOW_meta_sheet.png");//("textures/fow_textures.png");
 
 	//// change hint render scale quality to linear for this texture
 	//SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1"); // linear
@@ -119,80 +111,6 @@ bool j1FowManager::Update(float dt)
 		}
 	}
 
-	// render to texture
-	// changes render to target texture
-
-	//SDL_SetRenderTarget(App->render->renderer, blurredFogTex); // this
-	
-															   ///*SDL_SetRenderDrawColor(App->render->renderer, 0, 0, 0, 0);
-	//SDL_RenderClear(App->render->renderer);*/
-	////SDL_SetRenderDrawBlendMode(App->render->renderer, SDL_BLENDMODE_ADD);
-	////SDL_SetTextureBlendMode(blurredFogTex, SDL_BLENDMODE_BLEND);
-
-	//for (int y = 0; y < height; y++)
-	//{
-	//	for (int x = 0; x < width; x++)
-	//	{
-	//		if (fogDataMap[y * width + x] == FOGTYPE::FOG)
-	//		{
-	//			iPoint drawPos = App->map->MapToWorld(x, y);
-	//			SDL_Rect rect = { 64,0,64,64 };//{ 452,282,64,64 }; // 452,282 // 64,0,64,64
-	//			SDL_Rect dstRect = { drawPos.x,drawPos.y, rect.w, rect.h };
-	//			App->render->Blit(debugPropagationTex, drawPos.x, drawPos.y, &rect);
-	//			//SDL_RenderCopyEx(App->render->renderer, blurredFogTex, &sprite_rect, &section_to_print, 0, 0, SDL_FLIP_NONE);
-	//			
-	//			
-	//			//SDL_RenderCopy(App->render->renderer, App->entityFactory->entities_atlas_tex, &rect, &dstRect);
-	//		}
-	//	}
-	//}
-
-	/*uint w, h;
-	App->win->GetWindowSize(w, h);*/
-
-	/*SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1");
-	SDL_Texture* swapTexForBlur = App->tex->CreateTargetTexture(w / 4, h / 4);*/
-	//int passes = 8;
-	//for (int i = 0; i < passes; ++i)
-	//{
-	//	//SDL_RenderClear(App->render->renderer);
-	//	SDL_SetRenderTarget(App->render->renderer, swapTexForBlur);
-	//	SDL_RenderClear(App->render->renderer);
-	//	SDL_RenderCopy(App->render->renderer, blurredFogTex, NULL, NULL);
-	//	
-	//	//SDL_RenderClear(App->render->renderer);
-	//	SDL_SetRenderTarget(App->render->renderer, blurredFogTex);
-	//	SDL_RenderClear(App->render->renderer);
-	//	SDL_RenderCopy(App->render->renderer, swapTexForBlur, NULL, NULL);
-
-	//	//SDL_RenderClear(App->render->renderer);
-	//	
-	//}
-	//////SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "0");
-	//SDL_SetRenderTarget(App->render->renderer, NULL);
-	//SDL_DestroyTexture(swapTexForBlur);
-	//SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "0");
-
-
-	// blurr texture
-	/*for (int i = 0; i < 4; ++i)
-	{*/
-	/*int w, h;
-	SDL_QueryTexture(blurredFogTex, NULL, NULL,&w, &h);
-	SDL_Rect dstRect = { 0,0, w /2, h /2 };
-	SDL_RenderCopy(App->render->renderer, blurredFogTex, NULL, &dstRect);*/
-	/*dstRect = { 0,0, w, h };
-	SDL_RenderCopy(App->render->renderer, blurredFogTex, NULL, &dstRect);*/
-	//}
-
-	//Reset render target 
-	//SDL_SetRenderTarget(App->render->renderer, NULL);
-
-	/*int w, h;
-	SDL_QueryTexture(blurredFogTex, NULL, NULL, &w, &h);
-	SDL_Rect dstRect = { 0,0, w / 2, h / 2 };
-	SDL_RenderCopy(App->render->renderer, blurredFogTex, NULL, &dstRect);*/
-
 	return ret;
 }
 
@@ -208,101 +126,32 @@ bool j1FowManager::PostUpdate()
 		{
 			(*iter)->PostUpdate();
 		}
-	//}
-
-	//SDL_SetTextureAlphaMod(blurredFogTex, 225);
-	//App->render->Blit(blurredFogTex, 0, 0);//-App->render->camera.x, -App->render->camera.y);
 	
-	// for every fogged tile, print the fog
-	// only for tiles on screen margins and on the fog list
-	//TODO
-	/*for (int y = 0; y < height; y++)
-	{
-		for (int x = 0; x < width; x++)
-		{
-			if (fogDataMap[y * width + x].type == FOGTYPE::FOG)
-			{
-				iPoint drawPos = App->map->MapToWorld(x, y);
-				SDL_Rect rect = { 64,0,64,64 };
-				App->render->Blit(debugPropagationTex, drawPos.x, drawPos.y, &rect);
-			}
-		}
-	}*/
+
 	for (int y = 0; y < height; y++)
 	{
 		for (int x = 0; x < width; x++)
 		{
+			/*int index = fogDataMap[y * width + x].spriteTileIndex;*/
 			FOGTYPE fogType = fogDataMap[y * width + x].type;
+			iPoint drawPos = App->map->MapToWorld(x, y);
 
+			//if (fogType == FOGTYPE::VISIBLE && index == 0) // if we have a visible tile with index 0, means no different neighbours
+			//	continue;
+
+			/*if (fogType == FOGTYPE::FOG)
+				index = 2;
 			if (fogType == FOGTYPE::SHROUD)
-				shroudTiles.push_back({ x,y });
+				index = 0;*/
+
+			// print fogged tiles
 			if (fogType == FOGTYPE::FOG)
-				foggedTiles.push_back({ x,y });
-			if (fogType == FOGTYPE::VISIBLE)
-				visibleTiles.push_back({ x,y });
-
-
-			//int index = fogDataMap[y * width + x].spriteTileIndex;
-			//FOGTYPE fogType = fogDataMap[y * width + x].type;
-			//iPoint drawPos = App->map->MapToWorld(x, y);
-
-			//if (fogType == FOGTYPE::SHROUD)
-			//{
-			//	App->render->Blit(fogSmoothTex, drawPos.x, drawPos.y, &foggyTiles[index]);
-			//}
-
-			///*if (fogType == FOGTYPE::VISIBLE)
-			//{
-			//	index += 16;
-
-			//	App->render->Blit(fogSmoothTex, drawPos.x, drawPos.y, &foggyTiles[index]);
-			//}*/
-
-			//if (fogType == FOGTYPE::FOG && index > 0) //smooth corner
-			//{
-			//	App->render->Blit(fogSmoothTex, drawPos.x, drawPos.y, &foggyTiles[index]);
-			//}
-			//else if (fogType == FOGTYPE::FOG && index == 0) // full fog
-			//{
-			//	App->render->Blit(fogSmoothTex, drawPos.x, drawPos.y, &foggyTiles[7]);
-			//}
-
-
-
-			//int index = fogDataMap[y * width + x].spriteTileIndex;
-			//if (index > 0 && index < 16)//type != FOGTYPE::FOG)
-			//{
-			//	//int spriteIndex = fogDataMap[y * width + x].spriteTileIndex;
-
-			//	if (fogDataMap[y * width + x].type == FOGTYPE::FOG)
-			//		index += 16;
-
-			//	iPoint drawPos = App->map->MapToWorld(x, y);
-			//	//SDL_Rect rect = { 64,0,64,64 };
-			//	App->render->Blit(fogSmoothTex, drawPos.x, drawPos.y, &foggyTiles[index]);
-			//}
-
-			//if(fogDataMap[y * width + x].type == FOGTYPE::FOG)
+				App->render->Blit(fogSmoothTex, drawPos.x, drawPos.y, &foggyTiles[0]);
+		
+			
 			
 		}
 	}
-
-
-	// assign sprites for each "layer"
-	AssignSpriteIndexToListPositions(shroudTiles);
-	// draw only shroud
-	for (std::list<iPoint>::iterator iter = shroudTiles.begin(); iter != shroudTiles.end(); ++iter)
-	{
-		iPoint drawPos = App->map->MapToWorld((*iter).x, (*iter).y);
-		int spriteIndex = App->fogOfWar->GetFogTileAt((*iter))->spriteTileIndex;
-		
-		App->render->Blit(fogSmoothTex, drawPos.x, drawPos.y, &foggyTiles[spriteIndex]);
-	}
-
-	// free temporal lists
-	shroudTiles.clear();
-	visibleTiles.clear();
-	foggedTiles.clear();
 
 	return ret;
 }
@@ -455,6 +304,9 @@ bool FowEmitter::Update(float dt)
 	// if we change from tile, recalc visibility for this emitter
 	if (previousPosition != position)
 	{
+		////// stores all touched locations on this new step
+		//std::list<iPoint> touchedLocations = visited;
+
 		// updates last visibility positions to fog state
 		RemoveLastVisibilitySpot();
 		// put new position on frontier
@@ -463,9 +315,16 @@ bool FowEmitter::Update(float dt)
 		// propagate new visibility positions
 		PropagateBFS();
 		// filter
-		FilterLastVisibles();
+		//FilterLastVisibles();
 		// updates data map
 		UpdateVisibilitySpot();
+		// sum the new locations to touched
+		//for (std::list<iPoint>::iterator newVisited = visited.begin(); newVisited != visited.end(); ++newVisited)
+		//{
+		//	touchedLocations.push_back((*newVisited));
+		//}
+		////// updates pixel data
+		//App->fogOfWar->AssignSpriteIndexToListPositions(touchedLocations);
 		// decide what sprite index needs every new frontier division
 		//AssignSpriteIndexToCurrentFrontier();
 		// updates previous emitter position to this new position
@@ -485,6 +344,30 @@ bool FowEmitter::PostUpdate()
 		SDL_Rect rect = { 0,0,64,64 };
 		App->render->Blit(App->fogOfWar->debugPropagationTex, drawPos.x, drawPos.y, &rect);
 	}*/
+
+
+	// print smooth edges for frontier
+	std::queue<iPoint> temp = frontier;
+	std::list<iPoint> tempList;
+
+	while (!temp.empty())
+	{
+		iPoint tempPoint = temp.front();
+		temp.pop();
+		tempList.push_back(tempPoint);
+	}
+
+	App->fogOfWar->AssignSpriteIndexToListPositions(tempList);
+
+	for (std::list<iPoint>::iterator iter = tempList.begin(); iter != tempList.end(); ++iter)
+	{
+		iPoint drawPos = App->map->MapToWorld((*iter).x, (*iter).y);
+		int index = App->fogOfWar->GetFogTileAt((*iter))->spriteTileIndex;
+
+		if (index == 0) continue; // means visible
+
+		App->render->Blit(App->fogOfWar->fogSmoothTex, drawPos.x, drawPos.y, &App->fogOfWar->foggyTiles[index]);
+	}
 
 	return ret;
 }
@@ -562,6 +445,29 @@ bool FowEmitter::FilterLastVisibles()
 			++lastVisited;
 	}
 
+	// filter frontier too
+	std::queue<iPoint> frontierSwap = frontier;
+	std::queue<iPoint> tempQueue;
+
+	//std::list<iPoint> tempList;
+	
+	while (!frontierSwap.empty())
+	{
+		iPoint fogCheck = frontierSwap.front();
+
+		frontierSwap.pop();
+
+		FOGTILE* tile = App->fogOfWar->GetFogTileAt(fogCheck);
+		if (tile != nullptr)
+		{
+			if (tile->type != FOGTYPE::VISIBLE)
+				tempQueue.push(fogCheck);
+		}
+		
+	}
+
+	std::swap(frontier, tempQueue);
+
 	return true;
 }
 
@@ -589,12 +495,15 @@ bool FowEmitter::RemoveLastVisibilitySpot()
 	for (std::list<iPoint>::iterator lastVisited = visited.begin(); lastVisited != visited.end(); ++lastVisited)
 	{
 		FOGTILE* tile = App->fogOfWar->GetFogTileAt((*lastVisited));
-		if (tile != nullptr && tile->type == FOGTYPE::VISIBLE)
+		if (tile != nullptr)
 		{
-			App->fogOfWar->SetFogTypeToTile(FOGTYPE::FOG, (*lastVisited));
+			if (tile->type == FOGTYPE::VISIBLE && tile->spriteTileIndex >= 0)
+			{
+				App->fogOfWar->SetFogTypeToTile(FOGTYPE::FOG, (*lastVisited));
+			}
 			
 			//int prevIndex = tile->spriteTileIndex;
-			//App->fogOfWar->SetSpriteIndexToTile(0, (*lastVisited));
+			App->fogOfWar->SetSpriteIndexToTile(0, (*lastVisited));
 		}
 	}
 

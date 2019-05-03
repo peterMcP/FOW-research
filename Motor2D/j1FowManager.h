@@ -12,7 +12,7 @@ struct SDL_Texture;
 
 enum class FOGTYPE : uint
 {
-	SHROUD,
+	//SHROUD,
 	FOG,
 	VISIBLE,
 	MAX
