@@ -36,7 +36,7 @@
 #define fow_CSW         (FOW_BIT_W | FOW_BIT_SW | FOW_BIT_S |FOW_BIT_NW | FOW_BIT_C | FOW_BIT_SE)
 #define fow_CSE         (FOW_BIT_S | FOW_BIT_SE | FOW_BIT_E |FOW_BIT_NE | FOW_BIT_C | FOW_BIT_SW)
 
-	// joins
+// joins
 #define fow_JNE         (FOW_BIT_E | FOW_BIT_NE | FOW_BIT_N)
 #define fow_JNW         (FOW_BIT_N | FOW_BIT_NW | FOW_BIT_W)
 #define fow_JSW         (FOW_BIT_W | FOW_BIT_SW | FOW_BIT_S)
@@ -44,6 +44,10 @@
 
 // max num of sprite rects
 #define MAX_FOW_GRAPHICS 14
+// max radius precomputed masks
+#define FOW_RADIUS_MIN 3
+#define FOW_RADIUS_MAX 4
+#define FOW_MAX_RADIUS_LENGTH ((FOW_RADIUS_MAX * 2) + 1)
 
 struct SDL_Texture;
 
@@ -57,8 +61,8 @@ enum class FOGTYPE : uint
 
 struct FOWTILE
 {
-	unsigned short m_bits;
-	unsigned short m_bits2;
+	unsigned short m_bits_fog;
+	unsigned short m_bits_shroud;
 };
 
 // we have to add this emitter to any entity what we want
@@ -79,21 +83,22 @@ public:
 	void SetPos(iPoint pos);
 
 private:
+	std::list<iPoint> GetTilesAffected() const;
+	void ApplyMaskToMap(std::list<iPoint> tileList);
 
 public:
 	bool to_delete = false;
 
-
 private:
-	
 	uint radius;
 	iPoint position; // on TILE values
-	//iPoint previousPosition; // on TILE values
 };
 
 
 class j1FowManager : public j1Module
 {
+	friend class FowEmitter;
+
 public:
 	j1FowManager();
 	~j1FowManager();
@@ -110,8 +115,6 @@ public:
 	FowEmitter* AddFogEmitter(uint radius);
 	bool IsThisTileVisible(iPoint position) const;
 
-
-//private:
 public:
 	FOWTILE* GetFogTileAt(iPoint position) const;
 	bool CheckFogMapBoundaries(iPoint position) const;
@@ -128,7 +131,38 @@ private:
 	FOWTILE* fogDataMap = nullptr; // stores entire tilemap states for every tile
 	std::list<FowEmitter*> currentEmitters; // stores all emitters on entities
 
-	friend class FowEmitter;
+	
+
+protected:
+
+	// precomputed shape masks
+	unsigned short area_mask[2][FOW_MAX_RADIUS_LENGTH * FOW_MAX_RADIUS_LENGTH] =
+	{
+		// circle radius 3
+		{
+				fow_all, fow_all, fow_CNW, fow_NNN, fow_CNE, fow_all, fow_all,
+				fow_all, fow_CNW, fow_JNW, fow_non, fow_JNE, fow_CNE, fow_all,
+				fow_CNW, fow_JNW, fow_non, fow_non, fow_non, fow_JNE, fow_CNE,
+				fow_WWW, fow_non, fow_non, fow_non, fow_non, fow_non, fow_EEE,
+				fow_CSW, fow_JSW, fow_non, fow_non, fow_non, fow_JSE, fow_CSE,
+				fow_all, fow_CSW, fow_JSW, fow_non, fow_JSE, fow_CSE, fow_all,
+				fow_all, fow_all, fow_CSW, fow_SSS, fow_CSE, fow_all, fow_all,
+		},
+		// circle radius 4
+		{
+			fow_all,fow_all,fow_all,fow_CNW,fow_NNN,fow_CNE,fow_all,fow_all,fow_all,
+			fow_all,fow_all,fow_CNW,fow_JNW,fow_non,fow_JNE,fow_CNE,fow_all,fow_all,
+			fow_all,fow_CNW,fow_JNW,fow_non,fow_non,fow_non,fow_JNE,fow_CNE,fow_all,
+			fow_CNW,fow_JNW,fow_non,fow_non,fow_non,fow_non,fow_non,fow_JNE,fow_CNE,
+			fow_WWW,fow_non,fow_non,fow_non,fow_non,fow_non,fow_non,fow_non,fow_EEE,
+			fow_CSW,fow_JSW,fow_non,fow_non,fow_non,fow_non,fow_non,fow_JSE,fow_CSE,
+			fow_all,fow_CSW,fow_JSW,fow_non,fow_non,fow_non,fow_JSE,fow_CSE,fow_all,
+			fow_all,fow_all,fow_CSW,fow_JSW,fow_non,fow_JSE,fow_CSE,fow_all,fow_all,
+			fow_all,fow_all,fow_all,fow_CSW,fow_SSS,fow_CSE,fow_all,fow_all,fow_all,
+		},
+		// etc
+		// ...
+	};
 
 };
 

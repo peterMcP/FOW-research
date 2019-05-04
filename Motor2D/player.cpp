@@ -8,8 +8,8 @@
 Player::Player(iPoint position) : Entity(type, position)
 {
 	// Adds fow emitter
-	fogVisibilityEmitter = App->fogOfWar->AddFogEmitter(5);
-	LOG("");
+	fogVisibilityEmitter = App->fogOfWar->AddFogEmitter(3);
+
 }
 
 Player::~Player() {}

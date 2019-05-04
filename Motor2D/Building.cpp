@@ -7,7 +7,7 @@ Building::Building(EntityType entType, iPoint position) : Entity(entType, positi
 	
 	if (type == EntityType::ALLIED_BUILDING)
 	{
-		fogVisibilityEmitter = App->fogOfWar->AddFogEmitter(10);
+		fogVisibilityEmitter = App->fogOfWar->AddFogEmitter(3);
 		
 		// FOR TEXTURE PIVOT we must to offset this position
 		iPoint offsetedPos = position;

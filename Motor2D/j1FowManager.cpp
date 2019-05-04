@@ -5,6 +5,7 @@
 #include "j1Textures.h"
 #include "Entity.h"
 #include "j1Render.h"
+#include <assert.h>
 
 j1FowManager::j1FowManager()
 {
@@ -57,6 +58,8 @@ bool j1FowManager::Start()
 	fog_rects_table[0x1A0] = 11; // joint SE
 	fog_rects_table[0xC8] = 12; // joint SW
 
+	
+
 
 	//debug = true;
 
@@ -67,6 +70,10 @@ bool j1FowManager::PreUpdate()
 {
 	bool ret = true;
 
+	// reset fog data
+	for (int i = 0; i < width * height; ++i)
+		App->fogOfWar->fogDataMap[i].m_bits_fog = fow_all;
+
 	return ret;
 }
 
@@ -74,10 +81,7 @@ bool j1FowManager::Update(float dt)
 {
 	bool ret = true;
 
-	for (int i = 0; i < 25 * 25; ++i)
-		App->fogOfWar->fogDataMap[i].m_bits = fow_all;
-
-
+	// update current emitters visibility
 	for (std::list<FowEmitter*>::iterator iter = currentEmitters.begin(); iter != currentEmitters.end();)
 	{
 		if (!(*iter)->to_delete)
@@ -108,8 +112,7 @@ bool j1FowManager::PostUpdate()
 		}
 	}
 
-	
-	// TODO: print shroud and fogged areas, remember: m_bits and m_bits2 of our fogDataMap array
+	// TODO: print shroud and fogged areas, remember: m_bits_fog and m_bits_shroud of our fogDataMap array
 	// only if we get a correct defined frame on our table fog_rects_table[]
 
 	for (int y = 0; y < height; y++)
@@ -118,20 +121,26 @@ bool j1FowManager::PostUpdate()
 		{
 			// gets our current x,y FowTile
 			FOWTILE * tile = &fogDataMap[y * width + x];
-			const int frame_id = fog_rects_table[tile->m_bits];
-			const int frame_id2 = fog_rects_table[tile->m_bits2];
+			// get our frames id from fog data
+			const int frame_id_fog = fog_rects_table[tile->m_bits_fog];
+			// get our frames id from shroud data
+			const int frame_id_shroud = fog_rects_table[tile->m_bits_shroud];
 
+			// convert coords to world for print
 			iPoint drawPos = App->map->MapToWorld(x, y);
-			if (frame_id != -1)
+
+			// draw fog
+			if (frame_id_fog != -1)
 			{
 				SDL_SetTextureAlphaMod(smoothFogTex, 120);
 				
-				App->render->Blit(smoothFogTex, drawPos.x, drawPos.y, &foggyTilesRects[frame_id]);
+				App->render->Blit(smoothFogTex, drawPos.x, drawPos.y, &foggyTilesRects[frame_id_fog]);
 			}
-			if (frame_id2 != -1)
+			// draw shroud on top
+			if (frame_id_shroud != -1)
 			{
 				SDL_SetTextureAlphaMod(smoothFogTex, 255);
-				App->render->Blit(smoothFogTex, drawPos.x, drawPos.y, &foggyTilesRects[frame_id2]);
+				App->render->Blit(smoothFogTex, drawPos.x, drawPos.y, &foggyTilesRects[frame_id_shroud]);
 			}
 		}
 	}
@@ -178,8 +187,8 @@ void j1FowManager::CreateFogDataMap(uint width, uint height)
 
 	for (int i = 0; i < width*height; ++i)
 	{
-		fogDataMap[i].m_bits = fow_all;
-		fogDataMap[i].m_bits2 = fow_all;
+		fogDataMap[i].m_bits_fog = fow_all;
+		fogDataMap[i].m_bits_shroud = fow_all;
 		
 	}
 }
@@ -228,7 +237,7 @@ bool j1FowManager::IsThisTileVisible(iPoint position) const
 
 		if (tile != nullptr)
 		{
-			if (tile->m_bits != fow_all) // warning, corners and joints too
+			if (tile->m_bits_fog != fow_all) // warning, corners and joints too
 				ret = true;
 		}
 	}
@@ -244,7 +253,10 @@ FowEmitter::FowEmitter(){}
 
 FowEmitter::FowEmitter(uint radius) : radius(radius)
 {
-	
+	// check radius protection
+	assert(radius >= FOW_RADIUS_MIN);
+	assert(radius <= FOW_RADIUS_MAX);
+
 }
 
 FowEmitter::~FowEmitter(){}
@@ -260,59 +272,62 @@ bool FowEmitter::Update(float dt)
 {
 	bool ret = true;
 
-		unsigned short area_mask[49] =
-		{
-				fow_all, fow_all, fow_CNW, fow_NNN, fow_CNE, fow_all, fow_all,
-				fow_all, fow_CNW, fow_JNW, fow_non, fow_JNE, fow_CNE, fow_all,
-				fow_CNW, fow_JNW, fow_non, fow_non, fow_non, fow_JNE, fow_CNE,
-				fow_WWW, fow_non, fow_non, fow_non, fow_non, fow_non, fow_EEE,
-				fow_CSW, fow_JSW, fow_non, fow_non, fow_non, fow_JSE, fow_CSE,
-				fow_all, fow_CSW, fow_JSW, fow_non, fow_JSE, fow_CSE, fow_all,
-				fow_all, fow_all, fow_CSW, fow_SSS, fow_CSE, fow_all, fow_all,
-		};
-
-
-		int radius = 3;
-		int xCenter = position.x;
-		int yCenter = position.y;
-
-		const int   length = (radius * 2) + 1;
-		const int   num_entries = length * length;
-
-		std::list<iPoint> touchedPositions;
+	// get potentially affected tiles on our "radius"
+	std::list<iPoint> touchedPositions = GetTilesAffected();
+	// apply the mask
+	ApplyMaskToMap(touchedPositions);
 
 		
-		for (int y = yCenter - (length / 2);
-			y <= (yCenter + (length / 2));
-			y++)
-		{
-			for (int x = xCenter - (length / 2);
-				x <= (xCenter + (length / 2));
-				x++)
-			{
-				touchedPositions.push_back({ x,y });
-			}
-		}
-
-		// apply the mask -----------------------------
-		// bitwise ANDded
-
-		const unsigned short *  mask = &area_mask[0];
-
-		for(std::list<iPoint>::iterator iter = touchedPositions.begin(); iter != touchedPositions.end(); ++iter)
-		{
-			FOWTILE* tile = App->fogOfWar->GetFogTileAt((*iter));
-			
-			if (tile != nullptr)
-			{
-				tile->m_bits &= *mask;
-				tile->m_bits2 &= *mask;
-			}
-
-			mask++;
-		}
-		// ---------------------------------------------
 	return ret;
+}
+
+void FowEmitter::ApplyMaskToMap(std::list<iPoint> tiles)
+{
+	// apply the mask
+	// bitwise ANDded to fog data map
+
+	const unsigned short *  mask = &App->fogOfWar->area_mask[radius - FOW_RADIUS_MIN][0];
+
+	for (std::list<iPoint>::iterator iter = tiles.begin(); iter != tiles.end(); ++iter)
+	{
+		FOWTILE* tile = App->fogOfWar->GetFogTileAt((*iter));
+
+		if (tile != nullptr)
+		{
+			tile->m_bits_fog &= *mask;
+			tile->m_bits_shroud &= *mask;
+		}
+
+		mask++;
+	}
+	
+}
+
+std::list<iPoint> FowEmitter::GetTilesAffected() const
+{
+	int radius = this->radius;
+	int xCenter = position.x;
+	int yCenter = position.y;
+
+	const int   length = (radius * 2) + 1;
+	const int   num_entries = length * length;
+
+	std::list<iPoint> touchedPositions;
+
+
+	for (int y = yCenter - (length / 2);
+		y <= (yCenter + (length / 2));
+		y++)
+	{
+		for (int x = xCenter - (length / 2);
+			x <= (xCenter + (length / 2));
+			x++)
+		{
+			touchedPositions.push_back({ x,y });
+		}
+	}
+
+	return touchedPositions;
 }
 
 bool FowEmitter::PostUpdate()
