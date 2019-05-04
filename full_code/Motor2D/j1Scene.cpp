@@ -36,23 +36,28 @@ bool j1Scene::Awake(pugi::xml_node& node)
 // Called before the first frame
 bool j1Scene::Start()
 {
-	App->map->Load("maps/level.tmx");
+	bool ret = true;
 
-	// creates fog of war data
+	// loading map
+	ret = App->map->Load("maps/level.tmx");
 
-	App->fogOfWar->CreateFogDataMap(App->map->data.columns, App->map->data.rows);
-		
-	
-	// add player
-	App->entityFactory->AddEntity(EntityType::PLAYER, { -160,300 });
-	// add enemies
-	App->entityFactory->AddEntity(EntityType::ENEMY, { 200,200 });
-	
+	if (ret)
+	{
+		// creates fog of war data
+		App->fogOfWar->CreateFogDataMap(App->map->data.columns, App->map->data.rows);
 
+		// add player
+		App->entityFactory->AddEntity(EntityType::PLAYER, { -160,300 });
+		// add enemies
+		App->entityFactory->AddEntity(EntityType::ENEMY, { 200,200 });
+		App->entityFactory->AddEntity(EntityType::ENEMY, { 300,500 });
+		App->entityFactory->AddEntity(EntityType::ENEMY, { -300,400 });
+	}
+
+	// place start camera position
 	App->render->camera.x = 400;
 
-	
-	return true;
+	return ret;
 }
 
 bool j1Scene::PreUpdate() {
