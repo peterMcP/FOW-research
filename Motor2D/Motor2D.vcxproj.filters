@@ -45,11 +45,11 @@
     <ClCompile Include="Enemy.cpp">
       <Filter>Entities</Filter>
     </ClCompile>
-    <ClCompile Include="Building.cpp">
-      <Filter>Entities</Filter>
-    </ClCompile>
     <ClCompile Include="j1FowManager.cpp">
       <Filter>Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="Ward.cpp">
+      <Filter>Entities</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -108,11 +108,11 @@
     <ClInclude Include="Enemy.h">
       <Filter>Entities</Filter>
     </ClInclude>
-    <ClInclude Include="Building.h">
-      <Filter>Entities</Filter>
-    </ClInclude>
     <ClInclude Include="j1FowManager.h">
       <Filter>Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="Ward.h">
+      <Filter>Entities</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

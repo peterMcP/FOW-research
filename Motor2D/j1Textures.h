@@ -30,7 +30,6 @@ public:
 	bool				UnloadTexture(SDL_Texture* texture);
 	SDL_Texture* const	LoadSurface(SDL_Surface* surface);
 	void				GetSize(const SDL_Texture* texture, uint& width, uint& height) const;
-	SDL_Texture* const  CreateTargetTexture(const uint width, const uint height);
 
 public:
 

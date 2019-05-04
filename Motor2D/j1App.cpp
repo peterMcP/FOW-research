@@ -304,7 +304,7 @@ bool j1App::CleanUp()
 	PERF_START(ptimer);
 
 	bool ret = true;
-	std::list<j1Module*>::reverse_iterator item = modules.rend();
+	std::list<j1Module*>::reverse_iterator item = modules.rbegin();
 
 	while(item != modules.rend() && ret == true)
 	{

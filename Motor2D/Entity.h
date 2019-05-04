@@ -9,15 +9,14 @@ enum class EntityType
 {
 	PLAYER,
 	ENEMY,
-	ALLIED_BUILDING,
-	ENEMY_BUILDING
+	WARD
 };
 
 class Entity
 {
 public:
 	Entity(EntityType type, iPoint position);
-	~Entity();
+	virtual ~Entity();
 
 	virtual bool Update(float dt);
 	virtual	bool CleanUp();
@@ -26,14 +25,13 @@ public:
 	bool Draw();
 
 public:
+	bool to_delete = false;
 	EntityType type;
-
 	iPoint position;
 	SDL_Rect spriteRect;
 
 	// TODO: add fog of war emitter
 	FowEmitter* fogVisibilityEmitter = nullptr;
-
 
 };
 
