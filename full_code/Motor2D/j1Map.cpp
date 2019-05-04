@@ -1,13 +1,10 @@
-//#include "p2Defs.h"
 #include "p2Log.h"
 #include "j1App.h"
 #include "j1Render.h"
 #include "j1Textures.h"
 #include "j1Map.h"
-//#include <math.h>
-//#include "j1Scene.h"
-#include "Brofiler/Brofiler.h"
 #include "j1FowManager.h"
+#include "Brofiler/Brofiler.h"
 
 j1Map::j1Map() : j1Module() , map_loaded(false)
 {
@@ -71,11 +68,6 @@ void j1Map::Draw()
 		{
 			for (int x = 0; x < data.columns; ++x)
 			{
-				//// TODO: CHECK IF WE HAVE SHROUD, if we have, ignore this print
-				//if (App->fogOfWar->GetFogTileAt({ x,y })->spriteTileIndex == 0 &&
-				//	App->fogOfWar->GetFogTileAt({ x,y })->type == FOGTYPE::FOG)// == FOGTYPE::FOG)
-				//	continue;
-
 				int tile_id = (*layer)->GetArrayPos(x, y);
 				if (tile_id > 0)
 				{
