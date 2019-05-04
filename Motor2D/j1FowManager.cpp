@@ -58,8 +58,6 @@ bool j1FowManager::Start()
 	fog_rects_table[0x1A0] = 11; // joint SE
 	fog_rects_table[0xC8] = 12; // joint SW
 
-	
-
 
 	//debug = true;
 
@@ -189,7 +187,6 @@ void j1FowManager::CreateFogDataMap(uint width, uint height)
 	{
 		fogDataMap[i].m_bits_fog = fow_all;
 		fogDataMap[i].m_bits_shroud = fow_all;
-		
 	}
 }
 

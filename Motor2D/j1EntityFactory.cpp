@@ -2,7 +2,7 @@
 #include "j1EntityFactory.h"
 #include "player.h"
 #include "Enemy.h"
-#include "Building.h"
+#include "Ward.h"
 #include "j1Textures.h"
 #include "j1Map.h"
 
@@ -26,7 +26,7 @@ bool j1EntityFactory::Start()
 {
 	bool ret = true;
 
-	entities_atlas_tex = App->tex->LoadTexture("textures/atlas_entities_fow.png");
+	entities_atlas_tex = App->tex->LoadTexture("textures/entities_spritesheet.png");
 
 	return ret;
 }
@@ -34,6 +34,18 @@ bool j1EntityFactory::Start()
 bool j1EntityFactory::PreUpdate()
 {
 	bool ret = true;
+
+	// check if we have any entity to delete
+	for (std::list<Entity*>::iterator iter = entities.begin(); iter != entities.end(); )
+	{
+		if ((*iter)->to_delete)
+		{
+			delete (*iter);
+			iter = entities.erase(iter);
+		}
+		else
+			++iter;
+	}
 
 	return ret;
 }
@@ -102,28 +114,22 @@ Entity* j1EntityFactory::AddEntity(EntityType type, iPoint position)
 	case EntityType::PLAYER:
 	{
 		ret = new Player(position);
-		ret->spriteRect = { 447,76,65,70 };
+		ret->spriteRect = { 0,76,71,70 };
 		break;
 	}
 	case EntityType::ENEMY:
 	{
 		ret = new Enemy();
-		ret->spriteRect = { 439,0,74,66 };
+		ret->spriteRect = { 0,0,74,66 };
 		break;
 	}
-	case EntityType::ALLIED_BUILDING:
+	case EntityType::WARD:
 	{
-		ret = new Building(type, position);
-		ret->spriteRect = { 0, 0, 436,352 };
+		ret = new Ward(position);
+		ret->spriteRect = { 101, 83, 22,63 };
 		break;
 	}
-	case EntityType::ENEMY_BUILDING:
-	{
-		ret = new Building(type, position);
-		ret->spriteRect = { 0, 368, 436,352 };
-		break;
-		break;
-	}
+	
 	default:
 		break;
 	}

@@ -30,10 +30,6 @@ bool j1Scene::Awake(pugi::xml_node& node)
 
 	LOG("Loading Scene");
 
-	/*uint width, height;
-	App->win->GetWindowSize(width, height);*/
-
-	
 	return ret;
 }
 
@@ -46,31 +42,12 @@ bool j1Scene::Start()
 
 	App->fogOfWar->CreateFogDataMap(App->map->data.columns, App->map->data.rows);
 		
-	//// create walkability map
-	//if (App->map->map_loaded)
-	//{
-	//	int w, h;
-	//	uchar* data = NULL;
-	//	if (App->map->CreateWalkabilityMap(w, h, &data))
-	//		App->pathfinding->SetMap(w, h, data);
-
-	//	RELEASE_ARRAY(data);
-	//}
-
-	//debug_tex = App->tex->LoadTexture("maps/calculatedPathTex.png");
-
-
-
-	//SearchValidCameraPos();
 	
-	// adds player
+	// add player
 	App->entityFactory->AddEntity(EntityType::PLAYER, { -160,300 });
-	//// add enemys
+	// add enemies
 	App->entityFactory->AddEntity(EntityType::ENEMY, { 200,200 });
-	// add allied building
-	//App->entityFactory->AddEntity(EntityType::ALLIED_BUILDING, { 100,100 });
-	//// add enemies building
-	//App->entityFactory->AddEntity(EntityType::ENEMY_BUILDING, { 0,0 });
+	
 
 	App->render->camera.x = 400;
 
@@ -127,6 +104,13 @@ bool j1Scene::Update(float dt)
 		// adds player
 		App->entityFactory->AddEntity(EntityType::PLAYER, { mousePos.x,mousePos.y });
 	}
+	if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_DOWN)
+	{
+
+		// adds player
+		App->entityFactory->AddEntity(EntityType::WARD, { mousePos.x,mousePos.y });
+	}
+	
 
 
 	App->map->Draw();

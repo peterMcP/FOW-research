@@ -19,6 +19,9 @@ bool Entity::CleanUp()
 {
 	bool ret = true;
 
+	if (fogVisibilityEmitter != nullptr)
+		fogVisibilityEmitter->to_delete = true;
+
 	return ret;
 }
 
