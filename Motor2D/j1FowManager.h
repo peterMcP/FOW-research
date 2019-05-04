@@ -5,8 +5,6 @@
 #include "p2Defs.h"
 #include "p2Point.h"
 #include <list>
-#include <vector>
-#include <queue>
 
 #define FOW_BIT_NW  (1 << 0)
 #define FOW_BIT_N   (1 << 1)
@@ -50,14 +48,6 @@
 #define FOW_MAX_RADIUS_LENGTH ((FOW_RADIUS_MAX * 2) + 1)
 
 struct SDL_Texture;
-
-enum class FOGTYPE : uint
-{
-	SHROUD,
-	FOG,
-	VISIBLE,
-	MAX
-};
 
 struct FOWTILE
 {
