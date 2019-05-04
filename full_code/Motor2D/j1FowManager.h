@@ -64,9 +64,7 @@ public:
 	FowEmitter(uint radius);
 	~FowEmitter();
 
-	bool Start();
 	bool Update(float dt);
-	bool PostUpdate();
 	bool CleanUp();
 
 public:
@@ -112,7 +110,8 @@ public:
 private:
 	SDL_Rect foggyTilesRects[MAX_FOW_GRAPHICS];
 	SDL_Texture* smoothFogTex = nullptr;
-	signed char fog_rects_table[NUM_FOW_ENTRIES];
+	SDL_Texture* debugFogTex = nullptr;
+	signed char fog_rects_table[NUM_FOW_ENTRIES + 1];
 	bool debug = false;
 	// stores data map size ---
 	uint width;

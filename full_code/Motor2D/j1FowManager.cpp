@@ -5,6 +5,7 @@
 #include "j1Textures.h"
 #include "Entity.h"
 #include "j1Render.h"
+#include "j1Input.h"
 #include <assert.h>
 
 j1FowManager::j1FowManager()
@@ -26,6 +27,7 @@ bool j1FowManager::Start()
 	bool ret = true;
 
 	smoothFogTex = App->tex->LoadTexture("textures/fow_textures3.png");
+	debugFogTex = App->tex->LoadTexture("textures/fow_textures.png");
 
 	// foggy tiles rects
 	for (int i = 0; i < MAX_FOW_GRAPHICS; ++i)
@@ -33,12 +35,15 @@ bool j1FowManager::Start()
 
 	// initialize table for get index of foggyTilesRects
 	int i = 0;
-	for (; i < NUM_FOW_ENTRIES; i++)
+	for (; i < NUM_FOW_ENTRIES; ++i)
 	{
 		fog_rects_table[i] = -1;
 	}
 
 	// index 0 are reserved to totally shrouded/fogged tile
+	// full fog
+	fog_rects_table[0x1FF] = 0;
+
 	// big corners
 
 	fog_rects_table[0x5F] = 1; // corner NW
@@ -102,13 +107,9 @@ bool j1FowManager::PostUpdate()
 {
 	bool ret = true;
 
-	if (debug)
-	{
-		for (std::list<FowEmitter*>::iterator iter = currentEmitters.begin(); iter != currentEmitters.end(); ++iter)
-		{
-			(*iter)->PostUpdate();
-		}
-	}
+	// debug input
+	if (App->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN)
+		debug = !debug;
 
 	// TODO: print shroud and fogged areas, remember: m_bits_fog and m_bits_shroud of our fogDataMap array
 	// only if we get a correct defined frame on our table fog_rects_table[]
@@ -127,19 +128,26 @@ bool j1FowManager::PostUpdate()
 			// convert coords to world for print
 			iPoint drawPos = App->map->MapToWorld(x, y);
 
+			// changes texture if we want debug
+			SDL_Texture* fogTex = smoothFogTex;
+			if (debug)
+				fogTex = debugFogTex;
+
 			// draw fog
 			if (frame_id_fog != -1)
 			{
-				SDL_SetTextureAlphaMod(smoothFogTex, 120);
+				SDL_SetTextureAlphaMod(fogTex, 120);
 				
-				App->render->Blit(smoothFogTex, drawPos.x, drawPos.y, &foggyTilesRects[frame_id_fog]);
+				App->render->Blit(fogTex, drawPos.x, drawPos.y, &foggyTilesRects[frame_id_fog]);
+
 			}
 			// draw shroud on top
 			if (frame_id_shroud != -1)
 			{
-				SDL_SetTextureAlphaMod(smoothFogTex, 255);
-				App->render->Blit(smoothFogTex, drawPos.x, drawPos.y, &foggyTilesRects[frame_id_shroud]);
+				SDL_SetTextureAlphaMod(fogTex, 255);
+				App->render->Blit(fogTex, drawPos.x, drawPos.y, &foggyTilesRects[frame_id_shroud]);
 			}
+
 		}
 	}
 
@@ -166,6 +174,8 @@ bool j1FowManager::CleanUp()
 	// unload textures
 	if (smoothFogTex != nullptr)
 		App->tex->UnloadTexture(smoothFogTex);
+	if (debugFogTex != nullptr)
+		App->tex->UnloadTexture(debugFogTex);
 
 	return ret;
 }
@@ -258,12 +268,6 @@ FowEmitter::FowEmitter(uint radius) : radius(radius)
 
 FowEmitter::~FowEmitter(){}
 
-bool FowEmitter::Start()
-{
-	bool ret = true;
-
-	return ret;
-}
 
 bool FowEmitter::Update(float dt)
 {
@@ -327,13 +331,6 @@ std::list<iPoint> FowEmitter::GetTilesAffected() const
 	return touchedPositions;
 }
 
-bool FowEmitter::PostUpdate()
-{
-	bool ret = true;
-
-
-	return ret;
-}
 
 bool FowEmitter::CleanUp()
 {
