@@ -129,6 +129,12 @@ Till we use tiled map editor and all the University projects that we are running
 
 > The amount of limit of smoothness is the artist hand design! You can shape what you want.
 
+Here is how the final result is expected to look!:
+
+<p align="center">
+<img src="https://raw.githubusercontent.com/peterMcP/FOW-research/master/docs/images/final_result.gif" width="640">
+</p>
+
 ### Core of smooth - overview
 
 The core of this technique, is using bit masking, wich provides us a very smooth configuration "splitting" our fog tiles on a array of bits, used for assign every sprite change with perfect merging between visibility areas. Applying a precomputed "shape" masks bitwise ANDded to our fog data map (i explain this later).
