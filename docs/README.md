@@ -105,7 +105,7 @@ Till we use tiled map editor and all the University projects that we are running
 ### Core of smooth - overview
 
 The core of this technique, is using bit masking, wich provides us a very smooth configuration "splitting" our fog tiles on a array of bits, used for assign every sprite change with perfect merging between visibility areas. Applying a precomputed "shape" masks bitwise ANDded to our fog data map (i explain this later).
-You can find a full explanation on the [article](http://bobkoon.com/how-to-implement-a-fog-of-war-part-2-smooth/) iself **HIGHLY recommended lecture** . *Acknowledgments to its pertinent autor, many thanks to share this to the community.*
+You can find a full explanation on the [article](http://bobkoon.com/how-to-implement-a-fog-of-war-part-2-smooth/) itself **HIGHLY recommended lecture** . *Acknowledgments to its pertinent [autor](http://bobkoon.com/), many thanks to share this to the community.*
 
 Fog data map is composed by an array of FOWTILE structures, looks like this:
 
@@ -471,6 +471,50 @@ Don't forget when you finish to test de debug functionality with F1 Key to help 
 
 IMAGE
 
+And remember, you can instantiate more players and also wards!. Wards show you other ways to play with visibility mechanics, and don't forget, be creative!
+
+Image with more players
+
+Image with wards
+
 ## Improvements
 
+ - The fog layer doesn't needs to be updated on every frame, add it to a Delayed Update or a X ticks only update.
+ -  The visibility can be occluded throught certain types of tiles, or different terrain elevations, if your game play with heights this improvement is a must for you.
+ - Make more table_rects permutations! if you want a super smooth or a very gradient smooth maybe you need more sprites defining different fog situations (remember sub-pixels).
+
+## Acknowledgements and Webgraphy
+[Riot Games Article of how they implemented new Fog Of War](https://technology.riotgames.com/news/story-fog-and-war)
+[Fog of War - Wikipedia](https://en.wikipedia.org/wiki/Fog_of_war)
+[Fog of War and 2D grid - StackOverflow](https://stackoverflow.com/questions/13936368/fog-of-war-and-2d-grid)
+[How efficiently implement Fog of War in realtime- Post StackExchange gamedev](https://gamedev.stackexchange.com/questions/134040/how-do-i-efficiently-implement-fog-of-war-in-a-real-time-strategy-game)
+[Iron Marines Fog of War implementation part1](https://blog.gemserk.com/2018/08/27/implementing-fog-of-war-for-rts-games-in-unity-1-2/)
+[Iron Marines Fog of War implementation part2](https://blog.gemserk.com/2018/11/20/implementing-fog-of-war-for-rts-games-in-unity-2-2/)
+[How to implement a Fog of War chunky System](http://bobkoon.com/how-to-implement-a-fog-of-war-part-1-chunky/)
+[How to implement a Fog of War smooth System](http://bobkoon.com/how-to-implement-a-fog-of-war-part-2-smooth/)
+[Efficient Fog Of War - GameDev.net](https://www.gamedev.net/forums/topic/530346-efficient-fog-of-war/)
+[Implementing Fog Of War throught render to texture](http://damienclassen.blogspot.com/2014/02/implementing-fog-of-war.html)
+[Implementing Fog Of War throught marching squares](https://startupfreakgame.com/2017/02/12/creating-fog-of-war-in-games/)
+["Drawing negative circles" how to draw onto texture to simulate Fog of War - StackOverFlow](https://stackoverflow.com/questions/13654753/sdl-drawing-negative-circles-fog-of-war=)
+[Neighbour Aware tile selection](https://web.archive.org/web/20170608082007/http://www.saltgames.com/article/awareTiles/)
+[Extense list of how comercial games uses Fog of War](https://tvtropes.org/pmwiki/pmwiki.php/Main/FogOfWar)
+[Fog of War on comercial games - list -](https://www.giantbomb.com/fog-of-war/3015-14/)
+
+
+### Very interesting and useful articles
+[2D visibility](https://www.redblobgames.com/articles/visibility/)
+[Field of View](http://www.roguebasin.com/index.php?title=Field_of_Vision)
+[Roguelike vision algorithms](http://www.adammil.net/blog/v125_Roguelike_Vision_Algorithms.html)
+[Dynamic 2D shadow casting](http://archive.gamedev.net/archive/reference/programming/features/2dsoftshadow/page3.html)
+[Gaussian Blurr with linear sampling](http://rastergrid.com/blog/2010/09/efficient-gaussian-blur-with-linear-sampling/)
+[The HqX pixel art scaling algorithm](https://en.wikipedia.org/wiki/Hqx)
+[HqX scaling filter more in deepth](http://blog.pkh.me/p/19-butchering-hqx-scaling-filters.html)
+[Upscaling pixel art with extra smooth quality](http://johanneskopf.de/publications/pixelart/)
+[Fast circle algorithm- Bresenhams, also "midpoint" circle - StackOverFlow](https://stackoverflow.com/questions/1201200/fast-algorithm-for-drawing-filled-circles)
+[Bresenham's algorithm - wikipedia](https://es.wikipedia.org/wiki/Algoritmo_de_Bresenham)
+[Implementing Fog of War on Unity](https://andrewhungblog.wordpress.com/2018/06/23/implementing-fog-of-war-in-unity/)
+[Marching squares - wikipedia](https://en.wikipedia.org/wiki/Marching_squares)
+[Fog of War on strategy games on general](http://keithburgun.net/fog-of-war-in-push-the-lane-and-strategy-games-generally/)
+[Blurring on graphic carts without shaders](http://www.ulrichmierendorff.com/software/opengl_blur.html)
+[SDL - Blurring with texture render target trick](https://discourse.libsdl.org/t/question-blur-filters-on-sdl-textures/21145)
 
