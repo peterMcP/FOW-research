@@ -15,7 +15,13 @@ I explain the most used approachs of Fog Of War on some succesfull videogames, w
 -  Capable of hide desired game entities outside player visibility sight range.
 -  Manage multiple spots of visibility without uggly hacks and workarounds.
 
-You can found the full article on my research [website](https://petermcp.github.io/FOW-research/)
+### Expected final result:
+
+<p align="center">
+<img src="https://raw.githubusercontent.com/peterMcP/FOW-research/master/docs/images/final_result.gif" width="640">
+</p>
+
+You can found the full article on this research [website](https://petermcp.github.io/FOW-research/)
 
 ## Installing
 
