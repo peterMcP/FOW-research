@@ -8,6 +8,8 @@
 Player::Player(iPoint position) : Entity(type, position)
 {
 	// TODO2: Define fogVisibilityEmitter with radius 3 ---
+	// and set instantiation position
+	
 
 	// ----------------------------------------------------
 }
@@ -25,7 +27,7 @@ bool Player::Update(float dt)
 	if (fogVisibilityEmitter != nullptr)
 	{
 		// TODO3: update the position of the emitter to this position ---
-
+		
 		// --------------------------------------------------------------
 	}
 

@@ -44,7 +44,7 @@ bool j1Scene::Start()
 	if (ret)
 	{
 		// TODO1: creates fog of war data, see the function on j1FowManager, and pass the map data size on tile values
-
+		
 		// ----------------------
 		// add player
 		App->entityFactory->AddEntity(EntityType::PLAYER, { -160,300 });

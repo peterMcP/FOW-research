@@ -283,7 +283,7 @@ bool j1FowManager::IsThisTileVisible(iPoint position) const
 
 	if (CheckFogMapBoundaries(tilePos))
 	{
-		// TODO: check on fogged map bits
+		// check on fogged map bits
 		FOWTILE* tile = GetFogTileAt(tilePos);
 
 		if (tile != nullptr)

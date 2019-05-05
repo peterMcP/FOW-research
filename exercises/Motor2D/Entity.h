@@ -30,7 +30,7 @@ public:
 	iPoint position;
 	SDL_Rect spriteRect;
 
-	// TODO: add fog of war emitter
+	// add fog of war emitter
 	FowEmitter* fogVisibilityEmitter = nullptr;
 
 };
