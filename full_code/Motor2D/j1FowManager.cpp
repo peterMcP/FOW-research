@@ -144,7 +144,7 @@ bool j1FowManager::PostUpdate()
 	if (App->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN)
 		debug = !debug;
 
-	// TODO: print shroud and fogged areas, remember: m_bits_fog and m_bits_shroud of our fogDataMap array
+	// Print shroud and fogged areas, remember: m_bits_fog and m_bits_shroud of our fogDataMap array
 	// only if we get a correct defined frame on our table fog_rects_table[]
 
 	for (int y = 0; y < height; y++)
@@ -171,14 +171,20 @@ bool j1FowManager::PostUpdate()
 			{
 				SDL_SetTextureAlphaMod(fogTex, 120);
 				
+				// TODO5 - adapt this draw function --------------------------------
+				// you must to understand how the fog_rects_table mapping works ----
 				App->render->Blit(fogTex, drawPos.x, drawPos.y, &foggyTilesRects[frame_id_fog]);
+				// -----------------------------------------------------------------
 
 			}
 			// draw shroud on top
 			if (frame_id_shroud != -1)
 			{
 				SDL_SetTextureAlphaMod(fogTex, 255);
+
+				// TODO5 - adapt this draw function, same as above -----------------
 				App->render->Blit(fogTex, drawPos.x, drawPos.y, &foggyTilesRects[frame_id_shroud]);
+				// -----------------------------------------------------------------
 			}
 
 		}

@@ -414,7 +414,7 @@ If we want that visibility follow the player, we need to update its position.
 Expected result: now visibility follows the player around.
 
 #### Solution
-```
+```cpp
 // TODO3: update the position of the emitter to this position
 fogVisibilityEmitter->SetPos(position);
 ```
@@ -437,6 +437,40 @@ else
 	(*iter)->Draw();
 ```
 
+### TODO5 and last!
+A lot of talk how much smooth is this fog, and its totally chunky. Yes, you need to do the last step inside j1FowManager, adapt the draw function to get the correctly mapped values to our foggyTilesRects array that stores the correct rects for any smoothed graphic.
 
+Expected result:
+
+IMAGE
+
+#### Solution
+```cpp
+// draw fog
+if (frame_id_fog != -1)
+{
+	SDL_SetTextureAlphaMod(fogTex, 120);
+				
+	// TODO5 - adapt this draw function --------------------------------
+	// you must to understand how the fog_rects_table mapping works ----
+	App->render->Blit(fogTex, drawPos.x, drawPos.y, &foggyTilesRects[frame_id_fog]);
+	// -----------------------------------------------------------------
+
+}
+// draw shroud on top
+if (frame_id_shroud != -1)
+{
+	SDL_SetTextureAlphaMod(fogTex, 255);
+
+	// TODO5 - adapt this draw function, same as above -----------------
+	App->render->Blit(fogTex, drawPos.x, drawPos.y, &foggyTilesRects[frame_id_shroud]);
+	// -----------------------------------------------------------------
+}
+```
+Don't forget when you finish to test de debug functionality with F1 Key to help to understand how the system works.
+
+IMAGE
+
+## Improvements
 
 
