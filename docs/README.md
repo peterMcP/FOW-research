@@ -20,11 +20,15 @@ Before show you some videogames examples, we need to introduce the Fog of War fl
 
 > We talk more in deepth later, but here we go with a little introduction
 
-![Chunky Fow example](https://github.com/peterMcP/FOW-research/blob/master/docs/images/chunky_fow.jpg)
+<p align="center">
+<img src="https://raw.githubusercontent.com/peterMcP/FOW-research/master/docs/images/chunky_fow.jpg" width="640">
+</p>
 
 The chunky one is the most easy to implement and understand of fog of war, we only track a "bool" array or a simple enumerator with the flags visible/not visible (we can have a shroud too, we will talk this later).
 
-Image
+<p align="center">
+<img src="https://raw.githubusercontent.com/peterMcP/FOW-research/master/docs/images/aoe2_conquerors_smooth_fog.jpg" width="640">
+</p>
 
 The smooth one is more tricky, but we have plenty of ways to implement, passing throught texture scaling and blurring, printing to a texture(erasing it for example), with tricky algorithms like [marching squares](https://en.wikipedia.org/wiki/Marching_squares), [tile neighbour aware method](https://web.archive.org/web/20170608082007/http://www.saltgames.com/article/awareTiles/), or the chosen one, with bitmap masking.
 
@@ -43,19 +47,25 @@ If we made a quick look from the beginning, we can see how very emblematic sagas
 
 #### Age of Empires
 
-Image
+<p align="center">
+<img src="https://raw.githubusercontent.com/peterMcP/FOW-research/master/docs/images/aoe2fog.jpg" width="640">
+</p>
 
 On Age of Empires we found two types of "fog", by one side we have the **shroud**, the black "background", and the fog, the explored but out of range areas with dark transparency.
 
 #### StarCraft 2
 
-Image
+<p align="center">
+<img src="https://raw.githubusercontent.com/peterMcP/FOW-research/master/docs/images/sc2_wings.jpg" width="640">
+</p>
 
 On StarCraft2, like on Age of Empires we have the same layer configuration, but in this case with plus of interest, because some buildings can be moved out of previous place.
 
 #### Leage Of Legends
 
-Image
+<p align="center">
+<img src="https://raw.githubusercontent.com/peterMcP/FOW-research/master/docs/images/League-of-Legends-gank.jpg" width="640">
+</p>
 
 Example of how the fog of war can be applied outside RTS games, on League of Legends (like Dota2), we only have one layer, hiding to the players the enemy information, but not the map (since the map never changes, seems to have no sense). Cool examples that uses a very strategic component, introducing the **wards**, objects that players can buy and if are well player offer a huge advantage to the team.
 
@@ -65,34 +75,51 @@ Example of how the fog of war can be applied outside RTS games, on League of Leg
 ##### League of Legends from Riot Games
 Since we are talking about league of legends, i found a very interesting and cool [article](https://technology.riotgames.com/news/story-fog-and-war) from the developers from [Riot Games](https://www.riotgames.com/) of how they faced the migration to new re-design of the map and the adventure of the "jagged" edges of fog of war visibility.
 
-Image jagged
+<p align="center">
+<img src="https://raw.githubusercontent.com/peterMcP/FOW-research/master/docs/images/sr2_fow_before_2.jpg" width="640">
+</p>
 
 At end, they coded a impressive simply well thinked upscaled method that "blurrs" one pixel. If you want to know more of how they did, for theory and more explanations go to its [article](https://technology.riotgames.com/news/story-fog-and-war) **highly recommended.**
 
-Image final
+<p align="center">
+<img src="https://raw.githubusercontent.com/peterMcP/FOW-research/master/docs/images/lol_reworked_fog.jpg" width="640">
+</p>
 
 We can see that the result is awesome!, nice work Riot Games, and many thanks to share this type of information.
 
 ##### Iron Marines from Ironhide Game Studio
 
-Image
-
-Image
+<p align="center">
+<img src="https://raw.githubusercontent.com/peterMcP/FOW-research/master/docs/images/fog_without_previous_ingame_noblur.png"  width="320">
+<img src="https://raw.githubusercontent.com/peterMcP/FOW-research/master/docs/images/fog_without_previous_ingame.png"  width="320">
+</p>
 
 Similar technique like explained above, another highly recommended lecture, composed by two articles explaining the evolution of the system [part1](https://blog.gemserk.com/2018/08/27/implementing-fog-of-war-for-rts-games-in-unity-1-2/) [part2](https://blog.gemserk.com/2018/11/20/implementing-fog-of-war-for-rts-games-in-unity-2-2/)
 
 #### Print directly to texture
 This technique is based to paint "unpaint" a alpha bitmap mask from a previously edited texture, checks needed pixel data from the "screen texture layer" and apply the pixel data pixel by pixel accessing it throught texture data.
 
-IMAGE
+<p align="center">
+<img src="https://raw.githubusercontent.com/peterMcP/FOW-research/master/docs/images/Xkxt3.png"  width="253">
+<img src="https://raw.githubusercontent.com/peterMcP/FOW-research/master/docs/images/yXIBG.png"  width="320">
+</p>
 
-I recommend you take a look at this very interesting post at [StackOverFlow]()
+<p align="center">
+<img src="https://raw.githubusercontent.com/peterMcP/FOW-research/master/docs/images/jkxS5.png" width="580">
+</p>
+
+I recommend you take a look at this very interesting post at [StackOverFlow](https://stackoverflow.com/questions/13654753/sdl-drawing-negative-circles-fog-of-war=)
 
 #### From tile map data, for chunky and smooth fog
 
-Image from chunky
+<p align="center">
+<img src="https://raw.githubusercontent.com/peterMcP/FOW-research/master/docs/images/fog_1circle_radius3_no_smoothing.png" width="256">
+<img src="https://raw.githubusercontent.com/peterMcP/FOW-research/master/docs/images/fog_1circle_radius3.png" width="256">
+</p>
 
-Image from smooth final
+<p align="center">
+<img src="https://raw.githubusercontent.com/peterMcP/FOW-research/master/docs/images/fog_2circles_radius3.png" width="412">
+</p>
 
 Probably the best articles that i found after a lot of diving. Very well explained and detailed. Divided in two parts, explaning both systems.
 
@@ -120,11 +147,15 @@ Since i want to implement shroud and fog, we store its bits states on separate v
 
 For making a good smooth system, we need to "divide" each "pixel" or tile of our map or fog data map.
 
-IMAGE bitmasking
+<p align="center">
+<img src="https://raw.githubusercontent.com/peterMcP/FOW-research/master/docs/images/fog_subpixel_example1a.png" width="96">
+<img src="https://raw.githubusercontent.com/peterMcP/FOW-research/master/docs/images/fog_subpixel_example1b.png" width="380">
+</p>
 
-This image represents a North West Corner, as you can see, represented by the 0x5F hex value, or 95 on decimal base.
 
-For this selected approach i select a 3x3 (9) bits "sub-pixel" divisions for each tile cell, but you can split this till you want (2x2, 4x4, etc), the most high, more definitions we need to do on our look up table of entries. (and more and more permutations of bits we can define to make a super smooth fog (hire more graphic artists! ).
+This image represents a North West Corner, as you can see, represented by the 0x5F hex value, or 95 on decimal base. This direction points directly to our table rects definition.
+
+For this selected approach i select a 3x3 (9) bits "sub-pixel" divisions for each tile cell, but you can split this till you want (2x2, 4x4, etc), the most high, more definitions we need to do on our look up table of entries. (and more and more permutations of bits we can define to make a super smooth fog (and hire more graphic artists! ).
 
 The look up table looks like this:
 
@@ -135,13 +166,10 @@ The look up table looks like this:
 	{
 		fog_rects_table[i] = -1;
 	}
-
 	// index 0 are reserved to totally shrouded/fogged tile
 	// full fog
 	fog_rects_table[0x1FF] = 0;
-
 	// big corners
-
 	fog_rects_table[0x5F] = 1; // corner NW
 	fog_rects_table[0x137] = 2; // corner NE
 	fog_rects_table[0x1D9] = 3;// corner SW
@@ -389,9 +417,16 @@ And we are ready to start with the TODO's!
 Quick proposals of very easy exercises to understand the versatility of this core system and the easiest implementation that we need.
 ### TODO1
 In order to create a valid Fog data map filled with needed data to compute our fog, we need to create it first.
-Expected result:
 
-All black IMAGE
+**Before TODO1** result:
+<p align="center">
+<img src="https://raw.githubusercontent.com/peterMcP/FOW-research/master/docs/images/todo1_before.JPG" width="540">
+</p>
+
+**Expected** result:
+<p align="center">
+<img src="https://raw.githubusercontent.com/peterMcP/FOW-research/master/docs/images/expected_results_1.JPG" width="540">
+</p>
 
 #### Solution:
 ```cpp
@@ -401,7 +436,11 @@ App->fogOfWar->CreateFogDataMap(App->map->data.columns, App->map->data.rows);
 ```
  ### TODO2
  We need to define our fogVisibilityEmitter in our player constructor since we need that players provides us a visibility.
- Expected result:
+ 
+ **Expected** result:
+ <p align="center">
+<img src="https://raw.githubusercontent.com/peterMcP/FOW-research/master/docs/images/expected_results_2.JPG" width="540">
+</p>
 
 #### Solution:
 ```cpp
@@ -414,6 +453,9 @@ fogVisibilityEmitter->SetPos(position);
 If we want that visibility follow the player, we need to update its position.
 
 Expected result: now visibility follows the player around.
+<p align="center">
+<img src="https://raw.githubusercontent.com/peterMcP/FOW-research/master/docs/images/expected_results_3.JPG" width="540">
+</p>
 
 #### Solution
 ```cpp
@@ -423,11 +465,15 @@ fogVisibilityEmitter->SetPos(position);
 ### TODO4
 Since we want a visibility mechanic, we need to filter what entities are drawn or not outside player sight radius.
 
-Before: 
+**Before:**  Enemies are showing us its position under the fog! nerf them.
+<p align="center">
+<img src="https://raw.githubusercontent.com/peterMcP/FOW-research/master/docs/images/todo4_before.JPG" width="540">
+</p>
 
-Expected result:
-
-Image
+**Expected** result:
+<p align="center">
+<img src="https://raw.githubusercontent.com/peterMcP/FOW-research/master/docs/images/expected_results_4.JPG" width="540">
+</p>
 
 #### Solution
 ```cpp
@@ -444,9 +490,11 @@ else
 ### TODO5 and last!
 A lot of talk how much smooth is this fog, and its totally chunky. Yes, you need to do the last step inside j1FowManager, adapt the draw function to get the correctly mapped values to our foggyTilesRects array that stores the correct rects for any smoothed graphic.
 
-Expected result:
+**Expected** result:
+<p align="center">
+<img src="https://raw.githubusercontent.com/peterMcP/FOW-research/master/docs/images/expected_results_5.JPG" width="540">
+</p>
 
-IMAGE
 
 #### Solution
 ```cpp
@@ -473,13 +521,15 @@ if (frame_id_shroud != -1)
 ```
 Don't forget when you finish to test de debug functionality with F1 Key to help to understand how the system works.
 
-IMAGE
+<p align="center">
+<img src="https://raw.githubusercontent.com/peterMcP/FOW-research/master/docs/images/debugF1.JPG" width="540">
+</p>
 
 And remember, you can instantiate more players and also wards!. Wards show you other ways to play with visibility mechanics, and don't forget, be creative!
 
-Image with more players
-
-Image with wards
+<p align="center">
+<img src="https://raw.githubusercontent.com/peterMcP/FOW-research/master/docs/images/image_more_players_wards.JPG" width="540">
+</p>
 
 ## Improvements
 
