@@ -189,7 +189,7 @@ And combine them on new definitions to easily create pre-computed shape masks, l
 #define fow_JNE         (FOW_BIT_E | FOW_BIT_NE | FOW_BIT_N)
 // ...
 ```
-If you don't remember or doesn't known how to works the bitwise operators, you can found a great talk [here](https://stackoverflow.com/questions/141525/what-are-bitwise-shift-bit-shift-operators-and-how-do-they-work) **must see and understand how the application of bitmasking works** . [here](https://rambutan.readthedocs.io/projects/librambutan/en/master/lang/cpp/compoundbitwise.html) great documentation about compound Bitwise operators (`&=`, `|=`, `^=`). [here](https://en.wikipedia.org/wiki/Bitwise_operations_in_C#Left_shift_%3C%3C) another great article from wikipedia.
+If you don't remember or doesn't known how the bitwise operators works , you can found a great talk [here](https://stackoverflow.com/questions/141525/what-are-bitwise-shift-bit-shift-operators-and-how-do-they-work) **must see and understand how the application of bitmasking works** . [here](https://rambutan.readthedocs.io/projects/librambutan/en/master/lang/cpp/compoundbitwise.html) great documentation about compound Bitwise operators (`&=`, `|=`, `^=`). [here](https://en.wikipedia.org/wiki/Bitwise_operations_in_C#Left_shift_%3C%3C) another great article from wikipedia.
 
 Next we have to define our precomputed shape mask, here is an example from a "circle shape mask" for radius 3.
 ```cpp
@@ -205,7 +205,7 @@ Next we have to define our precomputed shape mask, here is an example from a "ci
 },
 ```
 
-Finally we need to apply this mask to our fog data map (the array of FOWTILES structures previously mentioned). And this is where the magic happens thanks to compound operator &=, wich preservers the fog coverage of the map independent of the corresponding value of our radius array, and perfectly merges multiple areas of different visibility units without problems.
+Finally we need to apply this mask to our fog data map (the array of FOWTILES structures previously mentioned). And this is where the magic happens thanks to compound operator &=, wich preservers the fog coverage of the map independent of the corresponding value of our mask radius array, and perfectly merges multiple areas of different visibility units without problems.
 
 ```cpp
 void FowEmitter::ApplyMaskToMap(std::list<iPoint> tiles)
@@ -230,8 +230,161 @@ void FowEmitter::ApplyMaskToMap(std::list<iPoint> tiles)
 	
 }
 ```
+### New dedicated module to manage Fog of War and Fog of War emitters
 
-***work in progress***
+To manage all the entitites that provides visibility on our game, we need one new module that i named it "j1FowManager", and a one specific class that we need to put and update its position on any desired entity that we want named "FowEmitter". To create FowEmitters only we need to pass a one parameter, the radius. Radius are directly relationated with the "circle shape masks" what we have said before. For this implementation we only have two disponible radius of 3 and 4, but you can write the amount that you want, and remember, you are not constrained only to "circle" shapes, any shape that you want is a valid one, **but**, remember to get the same affected amount of tiles with the whatever function you are using to get the involved tiles for the "zone of sight".
+
+The header of j1FowManager looks like this (apart of bit definitions and Fowtiles struct described before):
+
+```cpp
+class j1FowManager : public j1Module
+{
+	friend class FowEmitter;
+
+public:
+	j1FowManager();
+	~j1FowManager();
+
+	bool Start();
+	bool PreUpdate();
+	bool Update(float dt);
+	bool PostUpdate();
+	bool CleanUp();
+
+public:
+	void CreateFogDataMap(const uint width, const uint height);
+	FowEmitter* AddFogEmitter(uint radius);
+	bool IsThisTileVisible(iPoint position) const;
+
+public:
+	FOWTILE* GetFogTileAt(iPoint position) const;
+	bool CheckFogMapBoundaries(iPoint position) const;
+
+private:
+	void DebugMouseDrawTilePos() const;
+
+private:
+	SDL_Rect foggyTilesRects[MAX_FOW_GRAPHICS];
+	SDL_Texture* smoothFogTex = nullptr;
+	SDL_Texture* debugFogTex = nullptr;
+	signed char fog_rects_table[NUM_FOW_ENTRIES + 1];
+	bool debug = false;
+	// stores data map size ---
+	uint width;
+	uint height;
+	// ------------------------
+	FOWTILE* fogDataMap = nullptr; // stores entire tilemap states for every tile
+	std::list<FowEmitter*> currentEmitters; // stores all emitters on entities
+```
+
+And the simple class to manage the visibility spots of the desired entitites:
+
+```cpp
+// we have to add this emitter to any entity what we want
+// fow emitter updates auto its visibility to fog data map
+class FowEmitter
+{
+public:
+	FowEmitter();
+	FowEmitter(uint radius);
+	~FowEmitter();
+
+	bool Update(float dt);
+	bool CleanUp();
+
+public:
+	void SetPos(iPoint pos);
+
+private:
+	std::list<iPoint> GetTilesAffected() const;
+	void ApplyMaskToMap(std::list<iPoint> tileList);
+
+public:
+	bool to_delete = false;
+
+private:
+	uint radius;
+	iPoint position; // on TILE values
+};
+```
+And to make all this work, some other puntualizations are needed:
+
+- We have a simplistic j1EntityFactory module that manages entitites behaviour, and a simple Entity class. If we want that specific entities provides us visibility, we need to declare a pointer to a new possible FowEmitter:
+```cpp
+enum class EntityType
+{
+	PLAYER,
+	ENEMY,
+	WARD
+};
+
+class Entity
+{
+public:
+	Entity(EntityType type, iPoint position);
+	virtual ~Entity();
+
+	virtual bool Update(float dt);
+	virtual	bool CleanUp();
+
+public:
+	bool Draw();
+
+public:
+	bool to_delete = false;
+	EntityType type;
+	iPoint position;
+	SDL_Rect spriteRect;
+
+	// TODO: add fog of war emitter
+	// We need to add a fow emitter if we want that entities 
+	// provides us visibility.
+	FowEmitter* fogVisibilityEmitter = nullptr;
+
+};
+```
+And on the interested player itself (or the entity that you want), we need to define it:
+
+```cpp
+Player::Player(iPoint position) : Entity(type, position)
+{
+	// Adds fow emitter
+	fogVisibilityEmitter = App->fogOfWar->AddFogEmitter(3);
+
+}
+```
+**Remember** to update the position of the emitter when you want:
+```cpp
+bool Player::Update(float dt)
+{
+	bool ret = true;
+	// manages simple player input
+	SimpleInput();
+
+	// updates position of the emitter
+	fogVisibilityEmitter->SetPos(position);
+
+	// more functionality ...
+	// ...
+	return ret;
+}
+```
+With all this put in place, we are ready to start with the implementation, but one last thing before that. If we want that enemies for example, doesn't draw if they are out of player range of sight. We need to tweak how they are drawn, this may vary dependent of your implementation, but in our case with a simple test we solve this. In our entities draw method we have:
+
+```cpp
+// TODO: check entity types of our interest to draw or not outside visibility zone
+	if ((*iter)->type == EntityType::ENEMY)
+	{
+		if(App->fogOfWar->IsThisTileVisible((*iter)->position))
+			(*iter)->Draw();
+	}
+	else
+		(*iter)->Draw();
+```
+
+And we are ready to start with the TODO's!
+
+
 
 
 
