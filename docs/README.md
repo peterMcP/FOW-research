@@ -32,9 +32,11 @@ The smooth one is more tricky, but we have plenty of ways to implement, passing 
 
 ### Multiple combinations of mixing visibility layers
 
-Most classic RTS games franchises like Age of Empires, Warcraft, StarCraft, Civilization (to say some) uses two types of "fog", by one side we have the **shroud**, this layer represents unexplored territory (we doesn't see nothing) represented mostly on pure black color, and the **fog** layer itself, with dark transparency color or custom sprites/graphics, this layer represents **explored territory** but **out** of **our sight range**. On the **fog** layer, we see the last **seen** updates from the enemy from when we have previously sight on this zone, and if the enemy build or moves its units under our fog layer, we doesn't see anything till we go to re-explore the zone.
+Most classic RTS games franchises like Age of Empires, Warcraft, StarCraft, Civilization (to say some) uses two types of "fog", by one side we have the **shroud**, this layer represents unexplored territory (we doesn't see nothing) represented mostly on pure black color, and the **fog** layer itself, with dark transparency color or custom sprites/graphics, this layer represents **explored territory** but **out** of **our sight range**. On the **fog** layer, we see the last **seen** (outdated data) updates from the enemy from when we have previously sight on this zone, and if the enemy build or moves its units under our fog layer, we doesn't see anything till we go to re-explore the zone.
 
 > On most modern games we often only see the fog layer, without the shroud, making to a shroud a tasty old school look.
+
+But since we are playing with visibility tricks, the combination and functions of mixing layers and visibilities can be many as we need or create.
 
 ### Quick visual look to examples of games that uses Fog of War
 If we made a quick look from the beginning, we can see how very emblematic sagas of videogames are growth till today, and yes fog of war are a indispensable component that you may pass unobserved, till today.
@@ -59,5 +61,44 @@ Example of how the fog of war can be applied outside RTS games, on League of Leg
 
 ## Different approaches
 ### Quick look to different implementation methods
+#### From tile-grid map to texture method (smooth fog)
+##### League of Legends from Riot Games
+Since we are talking about league of legends, i found a very interesting and cool [article](https://technology.riotgames.com/news/story-fog-and-war) from the developers from [Riot Games](https://www.riotgames.com/) of how they faced the migration to new re-design of the map and the adventure of the "jagged" edges of fog of war visibility.
 
+Image jagged
+
+At end, they coded a impressive simply well thinked upscaled method that "blurrs" one pixel. If you want to know more of how they did, for theory and more explanations go to its [article](https://technology.riotgames.com/news/story-fog-and-war) **highly recommended.**
+
+Image final
+
+We can see that the result is awesome!, nice work Riot Games, and many thanks to share this type of information.
+
+##### Iron Marines from Ironhide Game Studio
+
+Image
+
+Image
+
+Similar technique like explained above, another highly recommended lecture, composed by two articles explaining the evolution of the system [part1](https://blog.gemserk.com/2018/08/27/implementing-fog-of-war-for-rts-games-in-unity-1-2/) [part2](https://blog.gemserk.com/2018/11/20/implementing-fog-of-war-for-rts-games-in-unity-2-2/)
+
+#### Print directly to texture
+This technique is based to paint "unpaint" a alpha bitmap mask from a previously edited texture, checks needed pixel data from the "screen texture layer" and apply the pixel data pixel by pixel accessing it throught texture data.
+
+IMAGE
+
+I recommend you take a look at this very interesting post at [StackOverFlow]()
+
+#### From tile map data, for chunky and smooth fog
+
+Image from chunky
+
+Image from smooth final
+
+Probably the best articles that i found after a lot of diving. Very well explained and detailed. Divided in two parts, explaning both systems.
+
+## Selected approach
+
+Till we use tiled map editor and all the University projects that we are running are based on a isometric tile space, i selected a similar idea that i previously found with Riot article, but mixing with the magic of bitmasking. It was a pleasant surprise to find and understand how this technique works and offer us a big potential and a simplistic code, a brilliant idea found at the last citated  Different Approaches. Probably the same underlaying technique used on games like Starcraft, Age Of Empires, Civilization, to say some, offering us this old school smooth finish.
+
+> The amount of limit of smoothness is the artist hand design! You can shape what you want.
 
