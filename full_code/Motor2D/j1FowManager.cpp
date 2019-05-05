@@ -51,10 +51,6 @@ bool j1FowManager::Start()
 	fog_rects_table[0x1D9] = 3;// corner SW
 	fog_rects_table[0x1F4] = 4; // corner SE
 
-	// mid corners
-
-	fog_rects_table[0x24] = 9; // "same" as joint NE;
-
 	// little corners
 
 	fog_rects_table[0x4] = 9; // "same" as joint NE // little NE
@@ -76,6 +72,7 @@ bool j1FowManager::Start()
 	fog_rects_table[0x120] = 11; // 5 and 8 || same as joint NW
 	fog_rects_table[0x3] = 10;// 0 and 1 || same as joint NW
 	fog_rects_table[0x9] = 10; // 0 and 3 || same as joint NW
+	fog_rects_table[0x24] = 9; // 5 and 2 || "same" as joint NE;
 	
 
 	// "tetris" pieces "same as straights"
@@ -98,6 +95,7 @@ bool j1FowManager::Start()
 	fog_rects_table[0x11] = 10;// same as Joint NW
 	fog_rects_table[0x110] = 11; // same as joint SE
 	fog_rects_table[0x14] = 9;// same as joint NE (2,4)
+	fog_rects_table[0x50] = 12;// same as joint SW
 
 	// -------------------------------------------------------------------------------
 
@@ -188,32 +186,8 @@ bool j1FowManager::PostUpdate()
 		}
 	}
 
-	int x, y;
-	App->input->GetMousePosition(x, y);
-
-	iPoint mousePos = App->render->ScreenToWorld(x, y);
-
-	mousePos = App->map->WorldToMap(mousePos.x, mousePos.y);
-
-	iPoint drawPoss = App->map->MapToWorld(mousePos.x, mousePos.y);
-
-	App->render->Blit(smoothFogTex, drawPoss.x, drawPoss.y, &foggyTilesRects[0]);
-
-	//LOG("%i,%i", mousePos.x, mousePos.y);
-
-	if (App->input->GetMouseButton(SDL_BUTTON_MIDDLE) == KEY_DOWN)
-	{
-
-		FOWTILE* tile = GetFogTileAt(mousePos);
-
-		if (tile != nullptr)
-		{
-			LOG("tile: %i,%i", mousePos.x, mousePos.y);
-			LOG("m_bits: %i", tile->m_bits_shroud);
-
-
-		}
-	}
+	if (debug)
+		DebugMouseDrawTilePos();
 
 	return ret;
 }
@@ -316,7 +290,33 @@ bool j1FowManager::IsThisTileVisible(iPoint position) const
 	return ret;
 }
 
+void j1FowManager::DebugMouseDrawTilePos() const
+{
+	int x, y;
+	App->input->GetMousePosition(x, y);
 
+	iPoint mousePos = App->render->ScreenToWorld(x, y);
+
+	mousePos = App->map->WorldToMap(mousePos.x, mousePos.y);
+
+	iPoint drawPos = App->map->MapToWorld(mousePos.x, mousePos.y);
+
+	App->render->Blit(smoothFogTex, drawPos.x, drawPos.y, &foggyTilesRects[0]);
+
+	if (App->input->GetMouseButton(SDL_BUTTON_MIDDLE) == KEY_DOWN)
+	{
+
+		FOWTILE* tile = GetFogTileAt(mousePos);
+
+		if (tile != nullptr)
+		{
+			LOG("tile: %i,%i", mousePos.x, mousePos.y);
+			LOG("m_bits: %i", tile->m_bits_shroud);
+
+
+		}
+	}
+}
 
 // FOG OF WAR EMITTER CLASS --------------------------------------------------------------
 

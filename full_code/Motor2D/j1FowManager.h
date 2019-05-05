@@ -41,7 +41,7 @@
 #define fow_JSE         (FOW_BIT_S | FOW_BIT_SE | FOW_BIT_E)
 
 // max num of sprite rects
-#define MAX_FOW_GRAPHICS 32
+#define MAX_FOW_GRAPHICS 16
 // max radius precomputed masks
 #define FOW_RADIUS_MIN 3
 #define FOW_RADIUS_MAX 4
@@ -106,6 +106,9 @@ public:
 public:
 	FOWTILE* GetFogTileAt(iPoint position) const;
 	bool CheckFogMapBoundaries(iPoint position) const;
+
+private:
+	void DebugMouseDrawTilePos() const;
 
 private:
 	SDL_Rect foggyTilesRects[MAX_FOW_GRAPHICS];
