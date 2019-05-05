@@ -385,6 +385,57 @@ With all this put in place, we are ready to start with the implementation, but o
 
 And we are ready to start with the TODO's!
 
+## TODO's and Solutions
+Quick proposals of very easy exercises to understand the versatility of this core system and the easiest implementation that we need.
+### TODO1
+In order to create a valid Fog data map filled with needed data to compute our fog, we need to create it first.
+Expected result:
+
+All black IMAGE
+
+#### Solution:
+```cpp
+// TODO1: creates fog of war data, see the function on j1FowManager, 
+// and pass the map data size on tile values
+App->fogOfWar->CreateFogDataMap(App->map->data.columns, App->map->data.rows);
+```
+ ### TODO2
+ We need to define our fogVisibilityEmitter in our player constructor since we need that players provides us a visibility.
+ Expected result:
+
+#### Solution:
+```cpp
+// TODO2: Define fogVisibilityEmitter with radius 3
+fogVisibilityEmitter = App->fogOfWar->AddFogEmitter(3);
+```
+### TODO3
+If we want that visibility follow the player, we need to update its position.
+
+Expected result: now visibility follows the player around.
+
+#### Solution
+```
+// TODO3: update the position of the emitter to this position
+fogVisibilityEmitter->SetPos(position);
+```
+### TODO4
+Since we want a visibility mechanic, we need to filter what entities are drawn or not outside player sight radius.
+
+Expected result:
+
+Image
+
+#### Solution
+```cpp
+// TODO4: check entity types of our interest (ENEMY) to draw or not outside visibility zone
+if ((*iter)->type == EntityType::ENEMY)
+{
+	if(App->fogOfWar->IsThisTileVisible((*iter)->position))
+		(*iter)->Draw();
+}
+else
+	(*iter)->Draw();
+```
 
 
 

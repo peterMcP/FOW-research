@@ -1,0 +1,283 @@
+<!-- Config file for the game -->
+
+<config>
+  <app cap_frames="false" framerate_cap="60">
+    <title>Swap game</title>
+    <organization>UPC</organization>
+  </app>
+	
+  <renderer>
+    <vsync value="true"/>
+  </renderer>
+
+  <window>
+    <resolution width="1024" height="768" scale="1"/>
+    <fullscreen value="false"/>
+    <borderless value="false"/>
+    <resizable value="false"/>
+    <fullscreen_window value="false"/>
+  </window>
+  
+  <gui>
+	<gui_config_filename path="gui_config.xml"/>
+  </gui>
+
+  <file_system>
+    <path>data.zip</path>
+  </file_system>
+  
+  <audio>
+	  <music_folder>audio/music/</music_folder>
+	  <fx_folder>audio/fx/</fx_folder>
+  </audio>
+
+  <map>
+    <folder>maps/</folder>
+	  <levels>
+      <level name="main_menu.tmx"/>
+      <!--<level name="test_level.tmx"/>-->
+      <!--<level name="level_factory.tmx"/>-->
+      <level name="level001.tmx"/>
+      <level name="level002.tmx"/>
+      <level name="level003.tmx"/>
+      <level name="level004.tmx"/>
+      <level name="level005.tmx"/>
+      <level name="level006.tmx"/>
+      <level name="level007.tmx"/>
+      <level name="level008.tmx"/>
+      <level name="level009.tmx"/>
+      <level name="level010.tmx"/>
+      <level name="level011.tmx"/>
+	    <level name="level012.tmx"/>
+      <level name="level013.tmx"/>
+	  </levels>
+  </map>
+
+  <scene>
+    <camera>
+      <horizontal_multiplier>3.0</horizontal_multiplier>
+      <jump_multiplier>20.0</jump_multiplier>
+      <fall_multiplier>1.2</fall_multiplier>
+      <horizontal_screen_divisions>8</horizontal_screen_divisions>
+      <vertical_screen_division>6</vertical_screen_division>
+    </camera>
+  </scene>
+  
+  <object>
+    <projectile_image>textures/projectile/projectile.png</projectile_image>
+    <player_idle_image>textures/engineer character/engineer-idle.png</player_idle_image>
+    <player_run_image>textures/engineer character/engineer-run.png</player_run_image>
+    <player_jump_image>textures/engineer character/engineer-jump.png</player_jump_image>
+    <robot_image>textures/robot_tileset.png</robot_image>
+    <shoot_indicator>textures/ShootIndicator.png</shoot_indicator>
+    <!-- The size we consider a standard tile to be (used when calculating moveSpeed and jumpHeight)-->
+    <tile_size>8</tile_size>
+	  <debug_path_enemy_tex>maps/debugPath.png</debug_path_enemy_tex>
+    
+    <projectile>
+      <speed>45</speed>
+      <collider_width>5</collider_width>
+      <collider_height>5</collider_height>
+      <sfx name="impact" value="impactSound.wav"/>
+    </projectile>
+    
+    <box>
+      <gravity>120</gravity>
+      <maximum_fall_velocity>60</maximum_fall_velocity>
+      <animation tile_width ="16" tile_height ="16">
+        <inactive_animation speed ="0">
+          <sprite x ="112" y ="208" w ="16" h="16"/>
+        </inactive_animation>
+        <active_animation speed ="0">
+          <sprite x ="144" y ="208" w ="16" h="16"/>
+        </active_animation>
+      </animation>
+      <big_box>
+        <animation tile_width ="32" tile_height ="32">
+          <inactive_animation speed ="0">
+            <sprite x ="0" y ="253" w ="32" h="32"/>
+          </inactive_animation>
+          <active_animation speed ="0">
+            <sprite x ="32" y ="253" w ="32" h="32"/>
+          </active_animation>
+        </animation>
+      </big_box>
+    </box>
+    
+    <enemy_land>
+      <gravity>120</gravity>
+      <speed chasing_speed = "50" idle_speed = "25"/>
+      <collider_rectangle x = "0" y ="0" w ="8" h="23" />
+      <update_cycle>500</update_cycle>
+      <move_speed>30.0</move_speed>
+      <reach_offset>3</reach_offset>
+      <detection_range> 20 </detection_range>
+      <maximum_fall_velocity>60</maximum_fall_velocity>
+      <animation>
+        <idle_animation speed = "15.0">
+          <sprite x ="209" y ="152" w ="15" h="24"/>
+          <sprite x ="225" y ="152" w ="15" h="24"/>
+          <sprite x ="241" y ="152" w ="15" h="24"/>
+          <sprite x ="257" y ="152" w ="15" h="24"/>
+        </idle_animation>
+        <moving_animation speed = "15.0">
+          <sprite x ="289" y ="152" w ="15" h="24"/>
+          <sprite x ="305" y ="152" w ="15" h="24"/>
+          <sprite x ="321" y ="152" w ="15" h="24"/>
+          <sprite x ="337" y ="152" w ="15" h="24"/>
+          <sprite x ="353" y ="152" w ="15" h="24"/>
+          <sprite x ="369" y ="152" w ="15" h="24"/>
+          <sprite x ="401" y ="152" w ="15" h="24"/>
+        </moving_animation>
+      </animation>
+    </enemy_land>
+    
+    <enemy_flying>
+	  <speed chasing_speed = "50" idle_speed = "25"/>
+	  <path_frequency_ms min_ms = "1000" max_ms = "1600"/>
+	  <idle_path_tilePoints minTiles ="-3" maxTiles="3"/>
+      <animation tile_width ="14" tile_height ="27">
+	    <jetpack_fire_animation speed ="25">
+	      <sprite x ="128" y ="229" w ="4" h ="11"/>
+		  <sprite x ="133" y ="229" w ="4" h ="11"/>
+		  <sprite x ="137" y ="229" w ="4" h ="11"/>
+		  <sprite x ="142" y ="229" w ="4" h ="11"/>
+	    </jetpack_fire_animation>
+        <idle_animation_searching speed = "15.0">
+          <sprite x ="210" y ="21" w ="14" h ="27"/>
+		  <sprite x ="226" y ="21" w ="14" h ="27"/>
+		  <sprite x ="242" y ="21" w ="14" h ="27"/>
+		  <sprite x ="258" y ="21" w ="14" h ="27"/>
+        </idle_animation_searching>
+		<idle_animation_detected speed = "15.0">
+          <sprite x ="0" y ="226" w ="14" h ="27"/>
+		  <sprite x ="16" y ="226" w ="14" h ="27"/>
+		  <sprite x ="32" y ="226" w ="14" h ="27"/>
+		  <sprite x ="48" y ="226" w ="14" h ="27"/>
+        </idle_animation_detected>
+		<idle_animation_marked speed = "15.0">
+          <sprite x ="64" y ="226" w ="14" h ="27"/>
+		  <sprite x ="80" y ="226" w ="14" h ="27"/>
+		  <sprite x ="96" y ="226" w ="14" h ="27"/>
+		  <sprite x ="112" y ="226" w ="14" h ="27"/>
+        </idle_animation_marked>
+      </animation>
+    </enemy_flying>
+    
+    <player>
+	    <sfx name="teleport" value="teleport2.wav"/>
+	    <sfx name="shoot" value="shoot01.wav"/>
+	    <sfx name="death" value="death.wav"/>
+	    <sfx name="jump" value="jump2.wav"/>
+	    <sfx name="win" value="round_end.wav"/>
+      <sfx name="aim" value="aim.wav"/>
+      <shoot_height>8</shoot_height>
+      <collider_width>10</collider_width>
+      <collider_height>18</collider_height>
+      <gravity>120</gravity>
+      <!-- Tiles it moves every second-->
+      <move_speed_ground>16</move_speed_ground>
+      <move_speed_air>12</move_speed_air>
+      <!-- Tiles it reaches when the character jumps -->
+      <jump_height>8</jump_height>
+      <feet_collider_width>10</feet_collider_width>
+      <feet_collider_height>5</feet_collider_height>
+      <maximum_fall_velocity>60</maximum_fall_velocity>
+      <recovery_time>0.3</recovery_time>
+      <animation tile_width ="16" tile_height ="28">
+        <idle_animation speed ="15.0">
+          <sprite x ="0" y ="0" w ="16" h="28"/>
+          <sprite x ="16" y ="0" w ="16" h="28"/>
+          <sprite x ="32" y ="0" w ="16" h="28"/>
+          <sprite x ="48" y ="0" w ="16" h="28"/>
+          <sprite x ="64" y ="0" w ="16" h="28"/>
+          <sprite x ="80" y ="0" w ="16" h="28"/>
+          <sprite x ="96" y ="0" w ="16" h="28"/>
+          <sprite x ="112" y ="0" w ="16" h="28"/>
+          <sprite x ="128" y ="0" w ="16" h="28"/>
+        </idle_animation>
+        <run_animation speed ="15.0">
+          <sprite x ="0" y ="0" w ="16" h="28"/>
+          <sprite x ="16" y ="0" w ="16" h="28"/>
+          <sprite x ="32" y ="0" w ="16" h="28"/>
+          <sprite x ="48" y ="0" w ="16" h="28"/>
+          <sprite x ="64" y ="0" w ="16" h="28"/>
+          <sprite x ="80" y ="0" w ="16" h="28"/>
+          <sprite x ="96" y ="0" w ="16" h="28"/>
+          <sprite x ="112" y ="0" w ="16" h="28"/>
+        </run_animation>
+        <jump_animation speed ="0.0">
+          <sprite x ="0" y ="0" w ="16" h="28"/>
+        </jump_animation>
+        <fall_animation speed ="0.0">
+          <sprite x ="16" y ="0" w ="16" h="28"/>
+        </fall_animation>
+      </animation>
+    </player>
+    
+	<trigger>
+	 <cooldown_time_ms>50</cooldown_time_ms>
+	 <animation tile_width ="14" tile_height ="3">
+		<small_inactive_animation speed ="0">
+          <sprite x ="113" y ="173" w ="14" h="3"/>
+        </small_inactive_animation>
+        <small_active_animation speed ="0">
+          <sprite x ="113" y ="189" w ="14" h="3"/>
+		</small_active_animation>
+	 </animation>
+	</trigger>
+    
+	<door>
+		<laser_active_texture>textures/laser/laser-active.png</laser_active_texture>
+		<laser_turn_on_texture>textures/laser/laser-turn-on.png</laser_turn_on_texture>
+		<laser_turn_off_texture>textures/laser/laser-turn-off.png</laser_turn_off_texture>
+		<animation>
+			<active speed ="45">
+				  <sprite x ="0" y ="11" w ="16" h="53"/>
+				  <sprite x ="16" y ="11" w ="16" h="53"/>
+				  <sprite x ="0" y ="11" w ="16" h="53"/>
+			</active>
+			<turn_on speed ="25">
+				  <sprite x ="0" y ="11" w ="16" h="53"/>
+				  <sprite x ="16" y ="11" w ="16" h="53"/>
+				  <sprite x ="32" y ="11" w ="16" h="53"/>
+				  <sprite x ="48" y ="11" w ="16" h="53"/>
+				  <sprite x ="64" y ="11" w ="16" h="53"/>
+				  <sprite x ="80" y ="11" w ="16" h="53"/>
+				  <sprite x ="96" y ="11" w ="16" h="53"/>
+			</turn_on>
+			<turn_off speed ="25">
+				  <sprite x ="0" y ="11" w ="16" h="53"/>
+				  <sprite x ="16" y ="11" w ="16" h="53"/>
+				  <sprite x ="32" y ="11" w ="16" h="53"/>
+				  <sprite x ="48" y ="11" w ="16" h="53"/>
+				  <sprite x ="64" y ="11" w ="16" h="53"/>
+				  <sprite x ="80" y ="11" w ="16" h="53"/>
+				  <sprite x ="96" y ="11" w ="16" h="53"/>
+			</turn_off>
+		</animation>
+	</door>
+    
+	<pizza lives="1">
+		<sprite x="73" y="261" w="16" h="16"/>
+		<wave up="6.0" down="9.0" amplitude="6.0"/>
+		<sfx>pizza.wav</sfx>
+	</pizza>
+	
+	<nutCoin score="10">
+		<sprite x="94" y="261" w="16" h="16"/>
+		<wave up="9.0" down="9.0" amplitude="2.0"/>
+		<sfx>nutCoin.wav</sfx>
+	</nutCoin>
+	
+  </object>
+  <Particles>
+	<teleport_texture01>textures/teleporter_01.png</teleport_texture01>
+	<teleport_texture02>textures/teleporter_hit.png</teleport_texture02>
+	<!-- sequential animation example, represents a square power of two texture  -->
+	<animation_teleport01 tile_width="48" tile_height="48" speed ="25" loop="false">
+		<size x="8" y="8"/>
+	</animation_teleport01>
+  </Particles>
+  
+</config>
