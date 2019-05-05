@@ -123,6 +123,21 @@ I recommend you take a look at this very interesting post at [StackOverFlow](htt
 
 Probably the best articles that i found after a lot of diving. Very well explained and detailed. Divided in two parts, explaning both systems.
 
+### Quick look to others 2D visibility alternatives
+
+Apart from the technique what are focused this research, exists plenty of ways to implement other visibility solutions. From more simplistic to more complex, and merging with more knowledgemts of light physics, raycasting, etc. Occluding areas behind certain objects, walls, or any type of obstacle or mechanic. By the way the intention doesn't vary, because our intention is hide player information too, but in some cases this techniques are not used only to hide, also to calculate light sources affected areas for example.
+
+A simple approach is to cast rays from the entity center, and obtain and fill the resultant triangles.
+
+<p align="center">
+<img src="https://raw.githubusercontent.com/peterMcP/FOW-research/master/docs/images/2dVisibility_2.JPG" width="320">
+<img src="https://raw.githubusercontent.com/peterMcP/FOW-research/master/docs/images/2dVisibility_3.JPG" width="320">
+</p>
+
+
+You can found one very good example explaining this raycast technique [here](https://www.redblobgames.com/articles/visibility/):
+
+
 ## Selected approach
 
 Till we use tiled map editor and all the University projects that we are running are based on a isometric tile space, i selected a similar idea that i previously found with Riot article, but mixing with the magic of bitmasking. It was a pleasant surprise to find and understand how this technique works and offer us a big potential and a simplistic code, a brilliant idea found at the last citated  Different Approaches. Probably the same underlaying technique used on games like Starcraft, Age Of Empires, Civilization, to say some, offering us this old school smooth finish.
