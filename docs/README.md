@@ -525,7 +525,7 @@ if (frame_id_shroud != -1)
 	// -----------------------------------------------------------------
 }
 ```
-Don't forget when you finish to test de debug functionality with F1 Key to help to understand how the system works.
+Don't forget when you finish to test the debug functionality with F1 Key to help to understand how the system works.
 
 <p align="center">
 <img src="https://raw.githubusercontent.com/peterMcP/FOW-research/master/docs/images/debugF1.JPG" width="640">
