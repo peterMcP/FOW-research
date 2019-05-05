@@ -543,6 +543,7 @@ And remember, you can instantiate more players and also wards!. Wards show you o
  -  The visibility can be occluded throught certain types of tiles, or different terrain elevations, if your game play with heights this improvement is a must for you.
  - Make more table_rects permutations! if you want a super smooth or a very gradient smooth maybe you need more sprites defining different fog situations (remember sub-pixels).
  -  The dimensions of fogData Array and the tile fog size, doesn't need to be the same as your tilemap data, you can vary it if you want. Put a offseted fog to cover entire possible tilesets design that fill more of "diamond" tile shape.
+ - If you have a huge map, maybe a some type of draw sorting are needed, we doesn't need to draw every fog tile. The same principle is used to cycle update.
 
 ## Acknowledgements and Webgraphy
 [Riot Games Article of how they implemented new Fog Of War](https://technology.riotgames.com/news/story-fog-and-war)
@@ -603,7 +604,7 @@ And remember, you can instantiate more players and also wards!. Wards show you o
 
 [Fog of War on strategy games on general](http://keithburgun.net/fog-of-war-in-push-the-lane-and-strategy-games-generally/)
 
-[Blurring on graphic carts without shaders](http://www.ulrichmierendorff.com/software/opengl_blur.html)
+[Blurring on graphic cards without shaders](http://www.ulrichmierendorff.com/software/opengl_blur.html)
 
 [SDL - Blurring with texture render target trick](https://discourse.libsdl.org/t/question-blur-filters-on-sdl-textures/21145)
 
