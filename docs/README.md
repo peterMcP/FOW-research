@@ -20,9 +20,7 @@ Before show you some videogames examples, we need to introduce the Fog of War fl
 
 > We talk more in deepth later, but here we go with a little introduction
 
-<p align="center">
-<img src="https://github.com/peterMcP/FOW-research/blob/master/docs/images/chunky_fow.jpg" width="800">
-</p>
+![Chunky Fow example](https://github.com/peterMcP/FOW-research/blob/master/docs/images/chunky_fow.jpg)
 
 The chunky one is the most easy to implement and understand of fog of war, we only track a "bool" array or a simple enumerator with the flags visible/not visible (we can have a shroud too, we will talk this later).
 
