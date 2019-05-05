@@ -102,3 +102,136 @@ Till we use tiled map editor and all the University projects that we are running
 
 > The amount of limit of smoothness is the artist hand design! You can shape what you want.
 
+### Core of smooth - overview
+
+The core of this technique, is using bit masking, wich provides us a very smooth configuration "splitting" our fog tiles on a array of bits, used for assign every sprite change with perfect merging between visibility areas. Applying a precomputed "shape" masks bitwise ANDded to our fog data map (i explain this later).
+You can find a full explanation on the [article](http://bobkoon.com/how-to-implement-a-fog-of-war-part-2-smooth/) iself **HIGHLY recommended lecture** . *Acknowledgments to its pertinent autor, many thanks to share this to the community.*
+
+Fog data map is composed by an array of FOWTILE structures, looks like this:
+
+```cpp
+struct FOWTILE
+{
+	unsigned short m_bits_fog;
+	unsigned short m_bits_shroud;
+};
+```
+Since i want to implement shroud and fog, we store its bits states on separate variables.
+
+For making a good smooth system, we need to "divide" each "pixel" or tile of our map or fog data map.
+
+IMAGE bitmasking
+
+This image represents a North West Corner, as you can see, represented by the 0x5F hex value, or 95 on decimal base.
+
+For this selected approach i select a 3x3 (9) bits "sub-pixel" divisions for each tile cell, but you can split this till you want (2x2, 4x4, etc), the most high, more definitions we need to do on our look up table of entries. (and more and more permutations of bits we can define to make a super smooth fog (hire more graphic artists! ).
+
+The look up table looks like this:
+
+```cpp
+// initialize table for get index of foggyTilesRects
+	int i = 0;
+	for (; i < NUM_FOW_ENTRIES; ++i)
+	{
+		fog_rects_table[i] = -1;
+	}
+
+	// index 0 are reserved to totally shrouded/fogged tile
+	// full fog
+	fog_rects_table[0x1FF] = 0;
+
+	// big corners
+
+	fog_rects_table[0x5F] = 1; // corner NW
+	fog_rects_table[0x137] = 2; // corner NE
+	fog_rects_table[0x1D9] = 3;// corner SW
+	fog_rects_table[0x1F4] = 4; // corner SE
+	// etc ...
+	// more cases
+	// ...
+```
+In this case, the values mapped to this table corresponds to an SDL_Rect array index wich stores the needed rects sections for each sprite case, looks like this:
+
+```cpp
+// foggy tiles rects
+	for (int i = 0; i < MAX_FOW_GRAPHICS; ++i)
+		foggyTilesRects[i] = { i * 64, 0, 64,64 };
+```
+
+Next, we need to define our "shape mask", thats it the shape wich we want to "substract" to the bits stored on each tile.
+On order to make the code more readable and modificable/debuggable, store our bit definitions for each sub-pixel on a legible format:
+
+```cpp
+#define FOW_BIT_NW  (1 << 0)
+#define FOW_BIT_N   (1 << 1)
+#define FOW_BIT_NE  (1 << 2)
+#define FOW_BIT_W   (1 << 3)
+#define FOW_BIT_C   (1 << 4)
+#define FOW_BIT_E   (1 << 5)
+#define FOW_BIT_SW  (1 << 6)
+#define FOW_BIT_S   (1 << 7)
+#define FOW_BIT_SE  (1 << 8)
+```
+And combine them on new definitions to easily create pre-computed shape masks, like this: (remember: you can found the full project code on github page)
+
+```cpp
+#define fow_all         (FOW_BIT_NW | FOW_BIT_N | FOW_BIT_NE | FOW_BIT_W | FOW_BIT_C | FOW_BIT_E |FOW_BIT_SW | FOW_BIT_S | FOW_BIT_SE)
+// ...
+#define NUM_FOW_ENTRIES fow_all
+// ...
+// straights
+#define fow_EEE         (FOW_BIT_SE | FOW_BIT_E | FOW_BIT_NE)
+// ...
+// corners
+#define fow_CNE         (FOW_BIT_E | FOW_BIT_NE | FOW_BIT_N |FOW_BIT_NW | FOW_BIT_C | FOW_BIT_SE)
+// ...
+// joins
+#define fow_JNE         (FOW_BIT_E | FOW_BIT_NE | FOW_BIT_N)
+// ...
+```
+If you don't remember or doesn't known how to works the bitwise operators, you can found a great talk [here](https://stackoverflow.com/questions/141525/what-are-bitwise-shift-bit-shift-operators-and-how-do-they-work) **must see and understand how the application of bitmasking works** . [here](https://rambutan.readthedocs.io/projects/librambutan/en/master/lang/cpp/compoundbitwise.html) great documentation about compound Bitwise operators (`&=`, `|=`, `^=`). [here](https://en.wikipedia.org/wiki/Bitwise_operations_in_C#Left_shift_%3C%3C) another great article from wikipedia.
+
+Next we have to define our precomputed shape mask, here is an example from a "circle shape mask" for radius 3.
+```cpp
+// circle radius 3
+{
+	fow_all, fow_all, fow_CNW, fow_NNN, fow_CNE, fow_all, fow_all,
+	fow_all, fow_CNW, fow_JNW, fow_non, fow_JNE, fow_CNE, fow_all,
+	fow_CNW, fow_JNW, fow_non, fow_non, fow_non, fow_JNE, fow_CNE,
+	fow_WWW, fow_non, fow_non, fow_non, fow_non, fow_non, fow_EEE,
+	fow_CSW, fow_JSW, fow_non, fow_non, fow_non, fow_JSE, fow_CSE,
+	fow_all, fow_CSW, fow_JSW, fow_non, fow_JSE, fow_CSE, fow_all,
+	fow_all, fow_all, fow_CSW, fow_SSS, fow_CSE, fow_all, fow_all,
+},
+```
+
+Finally we need to apply this mask to our fog data map (the array of FOWTILES structures previously mentioned). And this is where the magic happens thanks to compound operator &=, wich preservers the fog coverage of the map independent of the corresponding value of our radius array, and perfectly merges multiple areas of different visibility units without problems.
+
+```cpp
+void FowEmitter::ApplyMaskToMap(std::list<iPoint> tiles)
+{
+	// apply the mask
+	// bitwise ANDded to fog data map
+
+	const unsigned short *  mask = &App->fogOfWar->area_mask[radius - FOW_RADIUS_MIN][0];
+
+	for (std::list<iPoint>::iterator iter = tiles.begin(); iter != tiles.end(); ++iter)
+	{
+		FOWTILE* tile = App->fogOfWar->GetFogTileAt((*iter));
+
+		if (tile != nullptr)
+		{
+			tile->m_bits_fog &= *mask;
+			tile->m_bits_shroud &= *mask;
+		}
+
+		mask++;
+	}
+	
+}
+```
+
+***work in progress***
+
+
+
