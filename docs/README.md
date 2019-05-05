@@ -20,7 +20,9 @@ Before show you some videogames examples, we need to introduce the Fog of War fl
 
 > We talk more in deepth later, but here we go with a little introduction
 
-Image
+<p align="center">
+<img src="https://github.com/peterMcP/FOW-research/blob/master/docs/images/chunky_fow.jpg" width="800">
+</p>
 
 The chunky one is the most easy to implement and understand of fog of war, we only track a "bool" array or a simple enumerator with the flags visible/not visible (we can have a shroud too, we will talk this later).
 
@@ -405,8 +407,10 @@ App->fogOfWar->CreateFogDataMap(App->map->data.columns, App->map->data.rows);
 
 #### Solution:
 ```cpp
-// TODO2: Define fogVisibilityEmitter with radius 3
+// TODO2: Define fogVisibilityEmitter with radius 3 ---
+// and set instantiation position
 fogVisibilityEmitter = App->fogOfWar->AddFogEmitter(3);
+fogVisibilityEmitter->SetPos(position);
 ```
 ### TODO3
 If we want that visibility follow the player, we need to update its position.
@@ -420,6 +424,8 @@ fogVisibilityEmitter->SetPos(position);
 ```
 ### TODO4
 Since we want a visibility mechanic, we need to filter what entities are drawn or not outside player sight radius.
+
+Before: 
 
 Expected result:
 
@@ -482,6 +488,7 @@ Image with wards
  - The fog layer doesn't needs to be updated on every frame, add it to a Delayed Update or a X ticks only update.
  -  The visibility can be occluded throught certain types of tiles, or different terrain elevations, if your game play with heights this improvement is a must for you.
  - Make more table_rects permutations! if you want a super smooth or a very gradient smooth maybe you need more sprites defining different fog situations (remember sub-pixels).
+ -  The dimensions of fogData Array and the tile fog size, doesn't need to be the same as your tilemap data, you can vary it if you want. Put a offseted fog to cover entire possible tilesets design that fill more of "diamond" tile shape.
 
 ## Acknowledgements and Webgraphy
 [Riot Games Article of how they implemented new Fog Of War](https://technology.riotgames.com/news/story-fog-and-war)
