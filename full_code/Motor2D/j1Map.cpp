@@ -117,8 +117,8 @@ iPoint j1Map::MapToWorld(int column, int row) const
 		retVec.y = row * data.tile_height;
 		break;
 	case MapTypes::MAPTYPE_ISOMETRIC:
-		retVec.x = (column - row) * data.tile_width * 0.5f;
-		retVec.y = (column + row) * data.tile_height * 0.5f;
+		retVec.x = (column - row) * data.tile_width / 2;
+		retVec.y = (column + row) * data.tile_height / 2;
 		break;
 	default:
 		LOG("ERROR: Map type not identified.");

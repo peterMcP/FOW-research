@@ -26,14 +26,14 @@ bool j1FowManager::Start()
 {
 	bool ret = true;
 
-	smoothFogTex = App->tex->LoadTexture("textures/fow_textures3.png");
+	smoothFogTex = App->tex->LoadTexture("textures/fow_textures4.png");
 	debugFogTex = App->tex->LoadTexture("textures/fow_textures.png");
 
 	// foggy tiles rects
 	for (int i = 0; i < MAX_FOW_GRAPHICS; ++i)
 		foggyTilesRects[i] = { i * 64, 0, 64,64 };
 
-	// initialize table for get index of foggyTilesRects
+	// initialize table for get index of foggyTilesRects ---------------------------------
 	int i = 0;
 	for (; i < NUM_FOW_ENTRIES; ++i)
 	{
@@ -50,6 +50,17 @@ bool j1FowManager::Start()
 	fog_rects_table[0x137] = 2; // corner NE
 	fog_rects_table[0x1D9] = 3;// corner SW
 	fog_rects_table[0x1F4] = 4; // corner SE
+
+	// mid corners
+
+	fog_rects_table[0x24] = 9; // "same" as joint NE;
+
+	// little corners
+
+	fog_rects_table[0x4] = 9; // "same" as joint NE // little NE
+	fog_rects_table[0x40] = 12; // "same" as joint SW // little SW
+	fog_rects_table[0x100] = 11; // "same" as joint SE // little SE
+	fog_rects_table[0x1] = 10; //  "same" as joint NW // little NW
 	
 	// straights
 	fog_rects_table[0x7] = 5; // straight NNN
@@ -57,12 +68,38 @@ bool j1FowManager::Start()
 	fog_rects_table[0x124] = 7; // straight EEE
 	fog_rects_table[0x49] = 8; // straight WWW
 
+	// straights "joints"
+	fog_rects_table[0x6] = 9;// "same" as joint corner NW; // 1 and 2
+	fog_rects_table[0x48] = 12; //  3 and 6 || same as joint SW
+	fog_rects_table[0xC0] = 12; // 6 and 7 || same as joint SW
+	fog_rects_table[0x180] = 11; // 7 and 8 ||same as joint SE
+	fog_rects_table[0x120] = 11; // 5 and 8 || same as joint NW
+	fog_rects_table[0x3] = 10;// 0 and 1 || same as joint NW
+	fog_rects_table[0x9] = 10; // 0 and 3 || same as joint NW
+	
+
+	// "tetris" pieces "same as straights"
+	fog_rects_table[0x59] = 8; // same as straight WWW
+	fog_rects_table[0x17] = 5; // same as straight NNN
+	fog_rects_table[0x134] = 7; // same as straight EEE
+	fog_rects_table[0x1D0] = 6;// same as straight SSS
+
+
 	// joints
 	fog_rects_table[0x26] = 9; // joint NE
 	fog_rects_table[0xB] = 10; // joint NW
 	fog_rects_table[0x1A0] = 11; // joint SE
 	fog_rects_table[0xC8] = 12; // joint SW
 
+	// full diagonals
+	fog_rects_table[0x111] = 13; // diagonal top-left | bottom-right
+	fog_rects_table[0x54] = 14; // diagonal top-right | bottom - left
+	// mid diagonals
+	fog_rects_table[0x11] = 10;// same as Joint NW
+	fog_rects_table[0x110] = 11; // same as joint SE
+	fog_rects_table[0x14] = 9;// same as joint NE (2,4)
+
+	// -------------------------------------------------------------------------------
 
 	//debug = true;
 
@@ -147,6 +184,33 @@ bool j1FowManager::PostUpdate()
 				SDL_SetTextureAlphaMod(fogTex, 255);
 				App->render->Blit(fogTex, drawPos.x, drawPos.y, &foggyTilesRects[frame_id_shroud]);
 			}
+
+		}
+	}
+
+	int x, y;
+	App->input->GetMousePosition(x, y);
+
+	iPoint mousePos = App->render->ScreenToWorld(x, y);
+
+	mousePos = App->map->WorldToMap(mousePos.x, mousePos.y);
+
+	iPoint drawPoss = App->map->MapToWorld(mousePos.x, mousePos.y);
+
+	App->render->Blit(smoothFogTex, drawPoss.x, drawPoss.y, &foggyTilesRects[0]);
+
+	//LOG("%i,%i", mousePos.x, mousePos.y);
+
+	if (App->input->GetMouseButton(SDL_BUTTON_MIDDLE) == KEY_DOWN)
+	{
+
+		FOWTILE* tile = GetFogTileAt(mousePos);
+
+		if (tile != nullptr)
+		{
+			LOG("tile: %i,%i", mousePos.x, mousePos.y);
+			LOG("m_bits: %i", tile->m_bits_shroud);
+
 
 		}
 	}
