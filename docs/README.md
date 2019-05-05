@@ -310,6 +310,7 @@ private:
 And to make all this work, some other puntualizations are needed:
 
 - We have a simplistic j1EntityFactory module that manages entitites behaviour, and a simple Entity class. If we want that specific entities provides us visibility, we need to declare a pointer to a new possible FowEmitter:
+
 ```cpp
 enum class EntityType
 {
