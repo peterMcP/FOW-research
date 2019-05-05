@@ -98,8 +98,6 @@ struct TileSet
 	int					rows;
 	int					offset_x;
 	int					offset_y;
-	
-	//float				animSpeedFactor = 0.15f; // TODO, implement this custom propierty from tileset of animation
 };
 
 enum class MapTypes

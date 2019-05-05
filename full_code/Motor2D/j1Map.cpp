@@ -55,8 +55,6 @@ void j1Map::Draw()
 	if(map_loaded == false)
 		return;
 
-	//int mapBlitOffset = 50;//TODO: Get this from the xml
-
 	
 	for (std::list<MapLayer*>::iterator layer = data.mapLayers.begin(); layer != data.mapLayers.end(); ++layer)
 	{
@@ -446,18 +444,6 @@ bool j1Map::LoadLayer(pugi::xml_node& node, MapLayer* layer)
 		}
 	}
 
-	// check custom properties from layer - test functionality // TODO, implement latest handout to do this
-	/*pugi::xml_node properties = node.child("properties");
-	if (properties == NULL)
-	{
-		LOG("This layer doesnt have custom properties defined");
-	}
-	else
-	{
-		layer->parallaxSpeed = properties.child("property").attribute("value").as_float();
-		LOG("%f", layer->parallaxSpeed);
-	}*/
-
 	return ret;
 }
 
@@ -465,9 +451,6 @@ bool j1Map::LoadLayer(pugi::xml_node& node, MapLayer* layer)
 bool j1Map::Reset()
 {
 	map_loaded = false;
-	// TODO: maybe we need to search a less ugly workaround to restart scene
-	//App->scene->Disable();
-	//App->scene->Enable();
 
 	if (CleanUp()) {
 		return true;

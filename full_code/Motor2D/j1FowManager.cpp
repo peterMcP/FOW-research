@@ -74,13 +74,11 @@ bool j1FowManager::Start()
 	fog_rects_table[0x9] = 10; // 0 and 3 || same as joint NW
 	fog_rects_table[0x24] = 9; // 5 and 2 || "same" as joint NE;
 	
-
 	// "tetris" pieces "same as straights"
 	fog_rects_table[0x59] = 8; // same as straight WWW
 	fog_rects_table[0x17] = 5; // same as straight NNN
 	fog_rects_table[0x134] = 7; // same as straight EEE
 	fog_rects_table[0x1D0] = 6;// same as straight SSS
-
 
 	// joints
 	fog_rects_table[0x26] = 9; // joint NE
