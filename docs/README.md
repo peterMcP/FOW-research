@@ -420,12 +420,12 @@ In order to create a valid Fog data map filled with needed data to compute our f
 
 **Before TODO1** result:
 <p align="center">
-<img src="https://raw.githubusercontent.com/peterMcP/FOW-research/master/docs/images/todo1_before.JPG" width="540">
+<img src="https://raw.githubusercontent.com/peterMcP/FOW-research/master/docs/images/todo1_before.JPG" width="640">
 </p>
 
 **Expected** result:
 <p align="center">
-<img src="https://raw.githubusercontent.com/peterMcP/FOW-research/master/docs/images/expected_results_1.JPG" width="540">
+<img src="https://raw.githubusercontent.com/peterMcP/FOW-research/master/docs/images/expected_results_1.JPG" width="640">
 </p>
 
 #### Solution:
@@ -434,12 +434,12 @@ In order to create a valid Fog data map filled with needed data to compute our f
 // and pass the map data size on tile values
 App->fogOfWar->CreateFogDataMap(App->map->data.columns, App->map->data.rows);
 ```
- ### TODO2
+### TODO2
  We need to define our fogVisibilityEmitter in our player constructor since we need that players provides us a visibility.
  
  **Expected** result:
  <p align="center">
-<img src="https://raw.githubusercontent.com/peterMcP/FOW-research/master/docs/images/expected_results_2.JPG" width="540">
+<img src="https://raw.githubusercontent.com/peterMcP/FOW-research/master/docs/images/expected_results_2.JPG" width="640">
 </p>
 
 #### Solution:
@@ -454,7 +454,7 @@ If we want that visibility follow the player, we need to update its position.
 
 Expected result: now visibility follows the player around.
 <p align="center">
-<img src="https://raw.githubusercontent.com/peterMcP/FOW-research/master/docs/images/expected_results_3.JPG" width="540">
+<img src="https://raw.githubusercontent.com/peterMcP/FOW-research/master/docs/images/expected_results_3.JPG" width="640">
 </p>
 
 #### Solution
@@ -467,12 +467,12 @@ Since we want a visibility mechanic, we need to filter what entities are drawn o
 
 **Before:**  Enemies are showing us its position under the fog! nerf them.
 <p align="center">
-<img src="https://raw.githubusercontent.com/peterMcP/FOW-research/master/docs/images/todo4_before.JPG" width="540">
+<img src="https://raw.githubusercontent.com/peterMcP/FOW-research/master/docs/images/todo4_before.JPG" width="640">
 </p>
 
 **Expected** result:
 <p align="center">
-<img src="https://raw.githubusercontent.com/peterMcP/FOW-research/master/docs/images/expected_results_4.JPG" width="540">
+<img src="https://raw.githubusercontent.com/peterMcP/FOW-research/master/docs/images/expected_results_4.JPG" width="640">
 </p>
 
 #### Solution
@@ -492,7 +492,7 @@ A lot of talk how much smooth is this fog, and its totally chunky. Yes, you need
 
 **Expected** result:
 <p align="center">
-<img src="https://raw.githubusercontent.com/peterMcP/FOW-research/master/docs/images/expected_results_5.JPG" width="540">
+<img src="https://raw.githubusercontent.com/peterMcP/FOW-research/master/docs/images/expected_results_5.JPG" width="640">
 </p>
 
 
@@ -522,13 +522,13 @@ if (frame_id_shroud != -1)
 Don't forget when you finish to test de debug functionality with F1 Key to help to understand how the system works.
 
 <p align="center">
-<img src="https://raw.githubusercontent.com/peterMcP/FOW-research/master/docs/images/debugF1.JPG" width="540">
+<img src="https://raw.githubusercontent.com/peterMcP/FOW-research/master/docs/images/debugF1.JPG" width="640">
 </p>
 
 And remember, you can instantiate more players and also wards!. Wards show you other ways to play with visibility mechanics, and don't forget, be creative!
 
 <p align="center">
-<img src="https://raw.githubusercontent.com/peterMcP/FOW-research/master/docs/images/image_more_players_wards.JPG" width="540">
+<img src="https://raw.githubusercontent.com/peterMcP/FOW-research/master/docs/images/image_more_players_wards.JPG" width="640">
 </p>
 
 ## Improvements
